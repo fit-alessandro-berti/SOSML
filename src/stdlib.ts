@@ -1,11 +1,10 @@
-import { State, IdentifierStatus } from './state';
+import { State, IdentifierStatus, EvaluationParameters } from './state';
 import { InternalInterpreterError } from './errors';
 import { CustomType, FunctionType } from './types';
 import { Value, PredefinedFunction, PrintCounter, StringValue, ExceptionValue,
          ExceptionConstructor } from './values';
 import { InterpreterOptions } from './basic';
 import * as Interpreter from './main';
-import { EvaluationParameters } from './evaluator';
 
 import { ARRAY_LIB } from './stdlib/array';
 import { ASSERT_LIB } from './stdlib/assert';

@@ -1,9 +1,8 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
 import { TypeVariable, FunctionType, CustomType, TupleType } from '../types';
 import { Integer, PredefinedFunction, Value, RecordValue,
     ConstructedValue, ArrayValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { EvaluationParameters } from '../evaluator';
 import { Module, intType, sizeException, subscriptException } from '../stdlib';
 
 function addArrayLib(state: State): State {

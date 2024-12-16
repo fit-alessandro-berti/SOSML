@@ -1,4 +1,5 @@
 import { InterpreterOptions } from './basic';
+import { State, Structure } from './state';
 import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          LayeredPattern, FunctionApplication, TypedExpression, Record, List, Vector,
          Sequence, RecordSelector, Lambda, Conjunction, LocalDeclarationExpression,
@@ -23,8 +24,7 @@ import { FunctorDeclaration, StructureDeclaration, SignatureDeclaration, Functor
          TypeSpecification, EqualityTypeSpecification, DatatypeSpecification,
          DatatypeReplicationSpecification, ExceptionSpecification, StructureSpecification,
          IncludeSpecification, EmptySpecification, SequentialSpecification, SharingSpecification,
-         Signature, Structure, LocalDeclarationStructureExpression, TypeAliasSpecification } from './modules';
-import { State } from './state';
+         Signature, LocalDeclarationStructureExpression, TypeAliasSpecification } from './modules';
 
 export class Parser {
     private position: number = 0; // position of the next not yet parsed token

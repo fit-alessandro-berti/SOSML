@@ -1,8 +1,7 @@
-import { State, IdentifierStatus } from '../state';
+import { State, IdentifierStatus, EvaluationParameters } from '../state';
 import { FunctionType } from '../types';
 import { CharValue, Integer, PredefinedFunction, Value } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { EvaluationParameters } from '../evaluator';
 import { Module, charType, intType, chrException } from '../stdlib';
 
 function addCharLib(state: State): State {

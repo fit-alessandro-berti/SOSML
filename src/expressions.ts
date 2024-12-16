@@ -1,15 +1,16 @@
-import { TypeVariable, RecordType, Type, FunctionType, CustomType, AnyType, TypeVariableBind } from './types';
-import { Declaration, ValueBinding, ValueDeclaration } from './declarations';
+import { InternalInterpreterError, ElaborationError, EvaluationError, ParserError,
+         PatternMatchError, Warning } from './errors';
 import { Token, IdentifierToken, ConstantToken, IntegerConstantToken, RealConstantToken,
          NumericToken, WordConstantToken, CharacterConstantToken, StringConstantToken,
          LongIdentifierToken } from './tokens';
+import { EvaluationResult, EvaluationParameters, EvaluationStack, IdCnt } from './state';
+import { TypeVariable, RecordType, Type, FunctionType, CustomType, AnyType, TypeVariableBind } from './types';
+import { Declaration, ValueBinding, ValueDeclaration } from './declarations';
+
 import { State, IdentifierStatus } from './state';
-import { InternalInterpreterError, ElaborationError, EvaluationError, ParserError,
-         PatternMatchError, Warning } from './errors';
 import { Value, CharValue, StringValue, Integer, Real, Word, ValueConstructor,
          ExceptionConstructor, PredefinedFunction, RecordValue, FunctionValue,
          ExceptionValue, ConstructedValue, ReferenceValue, VectorValue } from './values';
-import { EvaluationResult, EvaluationParameters, EvaluationStack, IdCnt } from './evaluator';
 
 export abstract class Expression {
 

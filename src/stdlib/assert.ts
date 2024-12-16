@@ -1,8 +1,7 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
 import { TypeVariable, FunctionType, TupleType } from '../types';
 import { PredefinedFunction, RecordValue, Value, StringValue } from '../values';
 import { Warning, InternalInterpreterError } from '../errors';
-import { EvaluationParameters } from '../evaluator';
 import { Module, failException, intType, stringType } from '../stdlib';
 
 function addAssertLib(state: State): State {

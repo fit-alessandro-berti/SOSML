@@ -1,9 +1,8 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
 import { FunctionType } from '../types';
 import { MAXINT, MININT } from '../basic';
 import { Integer, PredefinedFunction,  StringValue, Value } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { EvaluationParameters } from '../evaluator';
 import { Module, intType, stringType } from '../stdlib';
 
 function addIntLib(state: State): State {

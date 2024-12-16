@@ -1,26 +1,19 @@
+import { Warning, EvaluationError, ElaborationError, InternalInterpreterError } from './errors';
+import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { Expression } from './expressions';
 import { Declaration } from './declarations';
-import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { Type, TypeVariable, CustomType, TypeVariableBind, FunctionType } from './types';
 import { State, DynamicInterface, DynamicStructureInterface, DynamicValueInterface, StaticBasis,
          DynamicTypeInterface, IdentifierStatus, DynamicBasis, DynamicFunctorInformation,
-         TypeInformation } from './state';
-import { Warning, EvaluationError, ElaborationError, InternalInterpreterError } from './errors';
+         TypeInformation, Structure, EvaluationResult, EvaluationParameters, EvaluationStack } from './state';
 import { Value } from './values';
 import { getInitialState } from './initialState';
-import { EvaluationResult, EvaluationParameters, EvaluationStack } from './evaluator';
 
 // Module Expressions
 
 // Structure Expressions
 
-export interface Structure {
-    computeStructure(params: EvaluationParameters, callStack: EvaluationStack, recCall: Declaration):
-        DynamicBasis | Value | undefined;
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
-              paramBindings: Map<string, Type>):
-        [StaticBasis, Warning[], Map<string, [Type, boolean]>, string];
-}
+
 
 export class StructureExpression extends Expression implements Structure {
 // struct <strdec> end

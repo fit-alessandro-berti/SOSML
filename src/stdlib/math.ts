@@ -1,8 +1,7 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
 import { FunctionType, TupleType } from '../types';
 import { Real, PredefinedFunction, Value, RecordValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { EvaluationParameters } from '../evaluator';
 import { Module, domainException, realType } from '../stdlib';
 
 function addMathLib(state: State): State {

@@ -3,12 +3,11 @@ import { Expression, ValueIdentifier, CaseAnalysis, Lambda, Match,
          Pattern, TypedExpression, Tuple, PatternExpression } from './expressions';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { Type, TypeVariable, FunctionType, CustomType, TypeVariableBind } from './types';
-import { State, IdentifierStatus, DynamicBasis, StaticBasis, TypeInformation } from './state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, TypeInformation, EvaluationResult, EvaluationStack, EvaluationParameters, IdCnt } from './state';
 import { InternalInterpreterError, ElaborationError,
          EvaluationError, FeatureDisabledError, Warning } from './errors';
 import { Value, ValueConstructor, ExceptionConstructor, ExceptionValue,
          FunctionValue } from './values';
-import { IdCnt, EvaluationResult, EvaluationStack, EvaluationParameters } from './evaluator';
 
 export abstract class Declaration {
     id: number;

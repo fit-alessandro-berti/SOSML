@@ -1,15 +1,43 @@
+import { Warning, InternalInterpreterError, EvaluationError } from './errors';
+import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
+import { PrintOptions } from './basic';
 import { Type, CustomType, FunctionType } from './types';
 import { Value, ReferenceValue, ValueConstructor, ExceptionConstructor } from './values';
-import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
-import { Warning, InternalInterpreterError, EvaluationError } from './errors';
-import { Structure } from './modules';
 import { Expression } from './expressions';
-import { PrintOptions } from './basic';
+
+export type IdCnt = { [name: string]: number };
+export type MemBind = [number, Value][];
 
 export enum IdentifierStatus {
     VALUE_VARIABLE,
     VALUE_CONSTRUCTOR,
     EXCEPTION_CONSTRUCTOR
+}
+
+export type EvaluationResult = {
+    'value': Value | undefined,
+    'hasThrown': boolean,
+    'newState': State | undefined,
+} | undefined;
+
+export type EvaluationParameters = {
+    [name: string]: any,
+    'state': State,
+    'modifiable': State,
+    'recResult': EvaluationResult
+};
+
+export type EvaluationStack = {
+    'next': any,
+    'params': EvaluationParameters
+}[];
+
+export interface Structure {
+    computeStructure(params: EvaluationParameters, callStack: EvaluationStack, recCall: Declaration):
+        DynamicBasis | Value | undefined;
+    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+              paramBindings: Map<string, Type>):
+        [StaticBasis, Warning[], Map<string, [Type, boolean]>, string];
 }
 
 // maps id to [Value, rebindable, intermediate]

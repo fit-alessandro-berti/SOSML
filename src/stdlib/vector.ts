@@ -1,9 +1,8 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
 import { TypeVariable, FunctionType, CustomType, TupleType } from '../types';
 import { Integer, PredefinedFunction, Value, RecordValue, VectorValue,
     ConstructedValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { EvaluationParameters } from '../evaluator';
 import { Module, subscriptException, intType } from '../stdlib';
 
 function addVectorLib(state: State): State {
