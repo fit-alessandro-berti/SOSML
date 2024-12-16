@@ -12,7 +12,8 @@ import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          HandleException, Match, InfixExpression, PatternExpression, While,
          ConjunctivePattern, DisjunctivePattern, PatternGuard, NestedMatch } from './expressions';
 import { Type, RecordType, TypeVariable, TupleType, CustomType, FunctionType } from './types';
-import { EmptyDeclaration, ValueBinding, ValueDeclaration,
+import { ValueDeclaration, ValueBinding } from './declarations0';
+import { EmptyDeclaration,
          FunctionValueBinding, FunctionDeclaration, TypeDeclaration, Evaluation,
          DatatypeReplication, DatatypeDeclaration, SequentialDeclaration,
          DatatypeBinding, TypeBinding, AbstypeDeclaration, LocalDeclaration,

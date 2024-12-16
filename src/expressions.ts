@@ -10,7 +10,7 @@ import { CharValue, StringValue, Integer, Real, Word, ValueConstructor,
          ExceptionConstructor, PredefinedFunction, RecordValue, FunctionValue,
          ExceptionValue, ConstructedValue, ReferenceValue, VectorValue } from './values';
 import { State } from './state';
-import { ValueBinding, ValueDeclaration } from './declarations';
+import { ValueBinding, ValueDeclaration } from './declarations0';
 
 export abstract class Expression {
 
