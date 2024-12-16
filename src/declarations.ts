@@ -1,14 +1,14 @@
-import { InterpreterOptions, IState, IdentifierStatus, EvaluationResult, EvaluationStack, EvaluationParameters, IdCnt, Declaration, Value } from './basic';
-import { Expression, ValueIdentifier, CaseAnalysis, Lambda, Match,
-         Pattern, TypedExpression, Tuple, PatternExpression } from './expressions';
-import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
-import { Type, TypeVariable, FunctionType, CustomType, TypeVariableBind } from './types';
-import { State } from './state';
-import { DynamicBasis, StaticBasis, TypeInformation } from './state';
 import { InternalInterpreterError, ElaborationError,
          EvaluationError, FeatureDisabledError, Warning } from './errors';
+import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
+import { InterpreterOptions, IState, IdentifierStatus, EvaluationResult, EvaluationStack, EvaluationParameters, IdCnt, Declaration, Value } from './basic';
+import { Type, TypeVariable, FunctionType, CustomType, TypeVariableBind } from './types';
 import { ValueConstructor, ExceptionConstructor, ExceptionValue,
          FunctionValue } from './values';
+import { State } from './state';
+import { DynamicBasis, StaticBasis, TypeInformation } from './state';
+import { Expression, ValueIdentifier, CaseAnalysis, Lambda, Match,
+         Pattern, TypedExpression, Tuple, PatternExpression } from './expressions';
 
 // Declaration subclasses
 export class ValueDeclaration extends Declaration {

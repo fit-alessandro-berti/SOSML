@@ -1,10 +1,10 @@
-import { IState as State } from './basic';
-import { IdentifierStatus, EvaluationParameters, Value, PrintCounter } from './basic';
 import { InternalInterpreterError } from './errors';
+import { IState as State } from './basic';
+import { InterpreterOptions } from './basic';
+import { IdentifierStatus, EvaluationParameters, Value, PrintCounter } from './basic';
 import { CustomType, FunctionType } from './types';
 import { PredefinedFunction, StringValue, ExceptionValue,
          ExceptionConstructor } from './values';
-import { InterpreterOptions } from './basic';
 import * as Interpreter from './main';
 
 import { ARRAY_LIB } from './stdlib/array';

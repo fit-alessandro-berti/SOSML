@@ -13,23 +13,24 @@ let AST = instance.lexParse(..code..);
 
 */
 
+import * as Errors from './errors';
+import * as Tokens from './tokens';
+import { InternalInterpreterError, Warning } from './errors';
 import { InterpreterOptions } from './basic';
 import { IState as State } from './basic';
 import { Value } from './basic';
+import * as Lexer from './lexer';
+import { Type } from './types';
+import * as Types from './types';
+import * as Values from './values';
 import { getInitialState } from './initialState';
 import { loadModule, STDLIB } from './stdlib';
-import { InternalInterpreterError, Warning } from './errors';
-import { Type } from './types';
-import * as Lexer from './lexer';
 import * as Parser from './parser';
 import * as Evaluator from './evaluator';
 
 import * as Declarations from './declarations';
-import * as Errors from './errors';
 import * as Expressions from './expressions';
-import * as Tokens from './tokens';
-import * as Types from './types';
-import * as Values from './values';
+
 
 export {
     Lexer,

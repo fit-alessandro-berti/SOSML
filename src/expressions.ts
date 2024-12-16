@@ -4,13 +4,13 @@ import { Token, IdentifierToken, ConstantToken, IntegerConstantToken, RealConsta
          NumericToken, WordConstantToken, CharacterConstantToken, StringConstantToken,
          LongIdentifierToken } from './tokens';
 import { EvaluationResult, EvaluationParameters, EvaluationStack, IdCnt, Declaration, Value } from './basic';
-import { TypeVariable, RecordType, Type, FunctionType, CustomType, AnyType, TypeVariableBind } from './types';
-import { ValueBinding, ValueDeclaration } from './declarations';
-import { State } from './state';
 import { IdentifierStatus } from './basic';
+import { TypeVariable, RecordType, Type, FunctionType, CustomType, AnyType, TypeVariableBind } from './types';
 import { CharValue, StringValue, Integer, Real, Word, ValueConstructor,
          ExceptionConstructor, PredefinedFunction, RecordValue, FunctionValue,
          ExceptionValue, ConstructedValue, ReferenceValue, VectorValue } from './values';
+import { State } from './state';
+import { ValueBinding, ValueDeclaration } from './declarations';
 
 export abstract class Expression {
 
