@@ -3,7 +3,7 @@ import { State, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType, TupleType } from '../types';
 import { Real, PredefinedFunction, RecordValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { Module, domainException, realType } from '../stdlib';
+import { Module, domainException, realType } from '../main';
 
 function addMathLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

@@ -1,21 +1,11 @@
-/*
+// main.ts (merged with stdlib.ts)
 
-This file is the main entry point for the interpreter.
-It should only contain logic required to provide the API to the frontend (backend).
-All required modules should be included at the top, for example if the main interpreter class
-is located in the file interpreter.ts:
-
-import Interpreter = require("./interpreter");
-// Do stuff with Interpreter
-let instance = new Interpreter();
-let AST = instance.lexParse(..code..);
-...
-
-*/
-
+// --------------------------------------
+// Original imports from main.ts
+// --------------------------------------
 import * as Errors from './errors';
-import * as Tokens from './tokens';
 import { InternalInterpreterError, Warning } from './errors';
+import * as Tokens from './tokens';
 import { InterpreterOptions } from './basic';
 import { IState as State } from './basic';
 import { Value } from './basic';
@@ -24,19 +14,40 @@ import { Type } from './types';
 import * as Types from './types';
 import * as Values from './values';
 import { getInitialState } from './initialState';
-import { loadModule, STDLIB } from './stdlib';
 import * as Parser from './parser';
 import * as Evaluator from './evaluator';
-
 import * as Declarations from './declarations';
 import * as Expressions from './expressions';
 
+// --------------------------------------
+// Additional imports from stdlib.ts
+// --------------------------------------
+import { IdentifierStatus, EvaluationParameters, PrintCounter } from './basic';
+import { CustomType, FunctionType } from './types';
+import { PredefinedFunction, StringValue, ExceptionValue,
+         ExceptionConstructor } from './values';
 
+// Import stdlib submodules
+import { ARRAY_LIB } from './stdlib/array';
+import { ASSERT_LIB } from './stdlib/assert';
+import { CHAR_LIB } from './stdlib/char';
+import { EVAL_LIB } from './stdlib/eval';
+import { INT_LIB } from './stdlib/int';
+import { LIST_LIB } from './stdlib/list';
+import { LISTSORT_LIB } from './stdlib/listsort';
+import { MATH_LIB } from './stdlib/math';
+import { RANDOM_LIB } from './stdlib/random';
+import { REAL_LIB } from './stdlib/real';
+import { STRING_LIB } from './stdlib/string';
+import { VECTOR_LIB } from './stdlib/vector';
+
+// --------------------------------------
+// Re-exports from original main.ts
+// --------------------------------------
 export {
     Lexer,
     Parser,
     Evaluator,
-
     Declarations,
     Errors,
     Expressions,
@@ -53,6 +64,9 @@ export type InterpretationResult = {
     warnings: Warning[]; // Array of emitted warnings / messages
 };
 
+// --------------------------------------
+// interpret function from main.ts
+// --------------------------------------
 export function interpret(nextInstruction: string,
                           oldState: State = getInitialState(),
                           options: InterpreterOptions = {
@@ -63,13 +77,9 @@ export function interpret(nextInstruction: string,
                               'realEquality': false
                           }): InterpretationResult {
     let state = oldState.getNestedState();
-
     let tkn = Lexer.lex(nextInstruction, options);
-
     let ast = Parser.parse(tkn, state, options);
-
     ast = ast.simplify();
-
     state = oldState.getNestedState();
 
     if (options.disableElaboration === true) {
@@ -181,8 +191,6 @@ export function interpret(nextInstruction: string,
                     }
                 }
             }
-
-
         }
         if (state.parent === undefined) {
             break;
@@ -200,6 +208,181 @@ export function interpret(nextInstruction: string,
         'warnings':             (<State> res.newState).getWarnings()
     };
 }
+
+
+// --------------------------------------
+// Code from stdlib.ts integrated below
+// --------------------------------------
+
+export let intType = new CustomType('int');
+export let realType = new CustomType('real');
+export let wordType = new CustomType('word');
+export let boolType = new CustomType('bool');
+export let stringType = new CustomType('string');
+export let charType = new CustomType('char');
+export let exnType = new CustomType('exn');
+
+export let overflowException = new ExceptionConstructor('Overflow', 0, 0, 3);
+export let domainException = new ExceptionConstructor('Domain', 0, 0, 4);
+export let sizeException = new ExceptionConstructor('Size', 0, 0, 5);
+export let chrException = new ExceptionConstructor('Chr', 0, 0, 6);
+export let subscriptException = new ExceptionConstructor('Subscript', 0, 0, 7);
+export let failException = new ExceptionConstructor('Fail', 1, 0, 8);
+
+function addGeneralLib(state: State): State {
+    state.setStaticValue('exnName', new FunctionType(exnType, stringType),
+                         IdentifierStatus.VALUE_VARIABLE);
+    state.setDynamicValue('exnName',
+                          new PredefinedFunction('exnName',
+                                                 (val: Value, params: EvaluationParameters) => {
+        if (val instanceof ExceptionValue) {
+            return [new StringValue((val as ExceptionValue).constructorName), false, []];
+        }
+        throw new InternalInterpreterError('Expected an exception.');
+    }), IdentifierStatus.VALUE_VARIABLE);
+
+
+    state.setStaticValue('exnMessage', new FunctionType(exnType, stringType),
+                         IdentifierStatus.VALUE_VARIABLE);
+    state.setDynamicValue('exnMessage',
+                          new PredefinedFunction('exnMessage',
+                                                 (val: Value, params: EvaluationParameters) => {
+        if (val instanceof ExceptionValue) {
+            return [new StringValue((val as ExceptionValue).pcToString(params.modifiable,
+                    new PrintCounter(50))), false, []];
+        }
+        throw new InternalInterpreterError('Expected an exception.');
+    }), IdentifierStatus.VALUE_VARIABLE);
+
+    return state;
+}
+
+// Define and export the Module type
+export type Module = {
+    'native': ((state: State, options?: InterpreterOptions) => State) | undefined,
+    'code': string | undefined,
+    'requires': string[] | undefined
+};
+
+
+export let STDLIB: {
+    [name: string]: {
+        'native': ((state: State, options?: InterpreterOptions) => State) | undefined,
+        'code': string | undefined,
+        'requires': string[] | undefined
+    }
+} = {
+    '__Base': {
+        'native': addGeneralLib,
+        'code': `fun o (f,g) x = f (g x);
+            infix 3 o;
+            datatype order = LESS | EQUAL | GREATER;
+
+            exception Domain;
+            exception Size;
+            exception Chr;
+            exception Subscript;
+            exception Fail of string;
+
+            fun not true = false | not false = true;
+
+            fun ignore a = ();
+            infix 0 before;
+            fun a before (b: unit) = a;`,
+        'requires': undefined
+    },
+    'Array': ARRAY_LIB,
+    'Assert' : ASSERT_LIB,
+    'Char': CHAR_LIB,
+    'Eval': EVAL_LIB,
+    'Int': INT_LIB,
+    'List': LIST_LIB,
+    'Listsort': LISTSORT_LIB,
+    'Math': MATH_LIB,
+    'Option': {
+        'native': undefined,
+        'code': `structure Option = struct
+                exception Option;
+
+                datatype 'a option = NONE | SOME of 'a;
+
+                fun getOpt (NONE, a) = a
+                  | getOpt (SOME x, a) = x;
+
+                fun isSome NONE = false
+                  | isSome (SOME _) = true;
+
+                fun valOf (SOME x) = x
+                  | valOf NONE = raise Option;
+            end;
+            open Option;
+
+            structure Option = struct
+                open Option;
+
+                fun app f (SOME v) = f v
+                  | app f NONE = ();
+
+                fun map f NONE = NONE
+                  | map f (SOME v) = SOME(f v);
+
+                fun mapPartial f NONE = NONE
+                  | mapPartial f (SOME v) = f v;
+
+                fun filter f x = if f x then SOME x else NONE;
+
+                fun join NONE = NONE
+                  | join (SOME (SOME x)) = SOME x;
+
+                fun compose (f, g) a = case g a of
+                      NONE => NONE
+                    | SOME v => SOME (f v);
+
+                fun composePartial (f, g) a = case g a of
+                      NONE => NONE
+                    | SOME v => (f v);
+            end;
+            `,
+        'requires': undefined
+    },
+    'Random': RANDOM_LIB,
+    'Real': REAL_LIB,
+    'String': STRING_LIB,
+    'Vector': VECTOR_LIB
+};
+
+export function loadModule(state: State, name: string, options: InterpreterOptions): State {
+    if (!STDLIB.hasOwnProperty(name)) {
+        throw new InternalInterpreterError('The module "' + name + '" does not exist. Auuuu~');
+    }
+    if (state.hasModule(name)) {
+        return state;
+    }
+
+    let mod = STDLIB[name];
+    if (mod.requires !== undefined ) {
+        for (let i of mod.requires) {
+            if (!state.hasModule(i)) {
+                state = loadModule(state, i, options);
+            }
+        }
+    }
+    if (mod.native !== undefined) {
+        state = mod.native(state, options);
+    }
+    if (mod.code !== undefined) {
+        // Previously: state = Interpreter.interpret(mod.code, state, options).state;
+        // Now we directly call interpret since it's defined above
+        state = interpret(mod.code, state, options).state;
+    }
+    state.registerModule(name);
+    return state;
+}
+
+
+// --------------------------------------
+// getAvailableModules and getFirstState from main.ts
+// --------------------------------------
 
 export function getAvailableModules(): string[] {
     let res: string[] = [];
@@ -224,4 +407,3 @@ export function getFirstState(loadModules: string[] = getAvailableModules(),
     }
     return res;
 }
-

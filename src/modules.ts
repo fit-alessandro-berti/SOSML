@@ -1,8 +1,9 @@
+// 12 -- safe
 import { Warning, EvaluationError, ElaborationError, InternalInterpreterError } from './errors';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { IState as State, Value, IdentifierStatus, EvaluationResult, EvaluationParameters, EvaluationStack, Structure, Declaration } from './basic';
-import { Expression } from './expressions';
 import { Type, TypeVariable, CustomType, TypeVariableBind, FunctionType } from './types';
+import { Expression } from './expressions';
 import { DynamicInterface, DynamicStructureInterface, DynamicValueInterface, StaticBasis,
          DynamicTypeInterface, DynamicBasis, DynamicFunctorInformation,
          TypeInformation } from './state';

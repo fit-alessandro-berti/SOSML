@@ -1,3 +1,4 @@
+// 09 -- safe
 import { InternalInterpreterError, ElaborationError,
          EvaluationError, Warning } from './errors';
 import { InterpreterOptions, IdentifierStatus, EvaluationResult, EvaluationStack, EvaluationParameters, Declaration, Value, IdCnt } from './basic';

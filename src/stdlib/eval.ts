@@ -6,7 +6,7 @@ import { InternalInterpreterError, Warning } from '../errors';
 import * as Lexer from '../lexer';
 import * as Parser from '../parser';
 import { ValueIdentifier, Record } from '../expressions';
-import { Module, stringType } from '../stdlib';
+import { Module, stringType } from '../main';
 
 function addEvalLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

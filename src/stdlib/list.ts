@@ -2,7 +2,7 @@ import { IdentifierStatus } from '../basic';
 import { State, DynamicBasis, StaticBasis } from '../state';
 import { TypeVariable, TypeVariableBind, FunctionType, CustomType, TupleType } from '../types';
 import { ValueConstructor } from '../values';
-import { Module } from '../stdlib';
+import { Module } from '../main';
 
 function addListLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

@@ -1,3 +1,4 @@
+// 10 -- safe
 import { InternalInterpreterError, ElaborationError, EvaluationError, ParserError,
          PatternMatchError, Warning } from './errors';
 import { IdentifierToken, ConstantToken, IntegerConstantToken, RealConstantToken,

@@ -3,7 +3,7 @@ import { State } from '../state';
 import { FunctionType } from '../types';
 import { CharValue, Integer, PredefinedFunction } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { Module, charType, intType, chrException } from '../stdlib';
+import { Module, charType, intType, chrException } from '../main';
 
 function addCharLib(state: State): State {
     state.setDynamicValue('ord', new PredefinedFunction('ord', (val: Value, params: EvaluationParameters) => {

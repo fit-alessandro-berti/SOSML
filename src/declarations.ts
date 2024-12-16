@@ -1,3 +1,4 @@
+// 11 -- safe
 import { InternalInterpreterError, ElaborationError,
          EvaluationError, FeatureDisabledError, Warning } from './errors';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';

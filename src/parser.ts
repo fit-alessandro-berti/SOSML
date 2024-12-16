@@ -1,3 +1,5 @@
+// 13 -- safe
+
 import { InternalInterpreterError, IncompleteError, ParserError, FeatureDisabledError } from './errors';
 import { Token, KeywordToken, IdentifierToken, ConstantToken, RealConstantToken,
          TypeVariableToken, LongIdentifierToken, IntegerConstantToken,
@@ -5,14 +7,14 @@ import { Token, KeywordToken, IdentifierToken, ConstantToken, RealConstantToken,
 import { InterpreterOptions } from './basic';
 import { IState as State } from './basic';
 import { Structure, Declaration } from './basic';
+import { Type, RecordType, TypeVariable, TupleType, CustomType, FunctionType } from './types';
+import { ValueDeclaration, ValueBinding } from './declarations0';
 import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          LayeredPattern, FunctionApplication, TypedExpression, Record, List, Vector,
          Sequence, RecordSelector, Lambda, Conjunction, LocalDeclarationExpression,
          Disjunction, Conditional, CaseAnalysis, RaiseException,
          HandleException, Match, InfixExpression, PatternExpression, While,
          ConjunctivePattern, DisjunctivePattern, PatternGuard, NestedMatch } from './expressions';
-import { Type, RecordType, TypeVariable, TupleType, CustomType, FunctionType } from './types';
-import { ValueDeclaration, ValueBinding } from './declarations0';
 import { EmptyDeclaration,
          FunctionValueBinding, FunctionDeclaration, TypeDeclaration, Evaluation,
          DatatypeReplication, DatatypeDeclaration, SequentialDeclaration,

@@ -3,7 +3,7 @@ import { State, DynamicBasis, StaticBasis } from '../state';
 import { TypeVariable, FunctionType, TupleType } from '../types';
 import { PredefinedFunction, RecordValue, StringValue } from '../values';
 import { Warning, InternalInterpreterError } from '../errors';
-import { Module, failException, intType, stringType } from '../stdlib';
+import { Module, failException, intType, stringType } from '../main';
 
 function addAssertLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

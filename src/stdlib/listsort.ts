@@ -1,4 +1,4 @@
-import { Module } from '../stdlib';
+import { Module } from '../main';
 
 export let LISTSORT_LIB: Module = {
     'native': undefined,
