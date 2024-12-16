@@ -1,13 +1,10 @@
-/*
- * Contains classes to represent SML values, e.g. int, string, functions, …
- */
+// safe
 
 import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';
 import { MININT, MAXINT } from './basic';
 import { IState as State, EvaluationStack, EvaluationParameters, IdentifierStatus, PrintCounter } from './basic';
 import { Value } from './basic';
-import { Match } from './expressions';
 
 export class ReferenceValue extends Value {
     constructor(public address: number) {
@@ -561,7 +558,7 @@ export class RecordValue extends Value {
 export class FunctionValue extends Value {
     constructor(public state: State,
                 public recursives: [string, Value][],
-                public body: Match) {
+                public body: any) {
         super();
     }
 
