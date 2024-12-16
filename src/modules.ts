@@ -1,11 +1,10 @@
 import { Warning, EvaluationError, ElaborationError, InternalInterpreterError } from './errors';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { Expression } from './expressions';
-import { Declaration } from './declarations';
 import { Type, TypeVariable, CustomType, TypeVariableBind, FunctionType } from './types';
 import { State, DynamicInterface, DynamicStructureInterface, DynamicValueInterface, StaticBasis,
          DynamicTypeInterface, IdentifierStatus, DynamicBasis, DynamicFunctorInformation,
-         TypeInformation, Structure, EvaluationResult, EvaluationParameters, EvaluationStack } from './state';
+         TypeInformation, Structure, EvaluationResult, EvaluationParameters, EvaluationStack, Declaration } from './state';
 import { Value } from './values';
 import { getInitialState } from './initialState';
 

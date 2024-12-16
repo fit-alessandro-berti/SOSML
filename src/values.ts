@@ -2,11 +2,11 @@
  * Contains classes to represent SML values, e.g. int, string, functions, …
  */
 
-import { State, IdentifierStatus, EvaluationStack, EvaluationParameters } from './state';
 import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';
-import { Match } from './expressions';
 import { MININT, MAXINT } from './basic';
+import { State, IdentifierStatus, EvaluationStack, EvaluationParameters } from './state';
+import { Match } from './expressions';
 
 export class PrintCounter {
     constructor(public charactersLeft: number) {

@@ -3,40 +3,11 @@ import { Expression, ValueIdentifier, CaseAnalysis, Lambda, Match,
          Pattern, TypedExpression, Tuple, PatternExpression } from './expressions';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { Type, TypeVariable, FunctionType, CustomType, TypeVariableBind } from './types';
-import { State, IdentifierStatus, DynamicBasis, StaticBasis, TypeInformation, EvaluationResult, EvaluationStack, EvaluationParameters, IdCnt } from './state';
+import { State, IdentifierStatus, DynamicBasis, StaticBasis, TypeInformation, EvaluationResult, EvaluationStack, EvaluationParameters, IdCnt, Declaration } from './state';
 import { InternalInterpreterError, ElaborationError,
          EvaluationError, FeatureDisabledError, Warning } from './errors';
 import { Value, ValueConstructor, ExceptionConstructor, ExceptionValue,
          FunctionValue } from './values';
-
-export abstract class Declaration {
-    id: number;
-    elaborate(state: State,
-              tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
-              nextName: string = '\'*t0',
-              paramBindings: Map<string, Type> = new Map<string, Type>(),
-              isTopLevel: boolean = false,
-              options: InterpreterOptions = {}):
-                [State, Warning[], Map<string, [Type, boolean]>, string] {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    evaluate(params: EvaluationParameters, callStack: EvaluationStack): EvaluationResult {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    toString(): string {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    simplify(): Declaration {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
-        return new Set<string>();
-    }
-}
 
 // Declaration subclasses
 export class ValueDeclaration extends Declaration {

@@ -3,9 +3,9 @@ import { InternalInterpreterError, ElaborationError, EvaluationError, ParserErro
 import { Token, IdentifierToken, ConstantToken, IntegerConstantToken, RealConstantToken,
          NumericToken, WordConstantToken, CharacterConstantToken, StringConstantToken,
          LongIdentifierToken } from './tokens';
-import { EvaluationResult, EvaluationParameters, EvaluationStack, IdCnt } from './state';
+import { EvaluationResult, EvaluationParameters, EvaluationStack, IdCnt, Declaration } from './state';
 import { TypeVariable, RecordType, Type, FunctionType, CustomType, AnyType, TypeVariableBind } from './types';
-import { Declaration, ValueBinding, ValueDeclaration } from './declarations';
+import { ValueBinding, ValueDeclaration } from './declarations';
 
 import { State, IdentifierStatus } from './state';
 import { Value, CharValue, StringValue, Integer, Real, Word, ValueConstructor,

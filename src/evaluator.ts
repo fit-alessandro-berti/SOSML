@@ -1,8 +1,5 @@
-import { State, EvaluationResult, EvaluationStack } from './state';
-//import { Expression, Match } from './expressions';
-import { Declaration } from './declarations';
-//import { Value } from './values';
 import { InternalInterpreterError } from './errors';
+import { State, EvaluationResult, EvaluationStack, Declaration } from './state';
 
 export function evaluate(state: State, ast: Declaration): EvaluationResult {
     let modifiable = state.getNestedState();

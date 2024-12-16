@@ -1,6 +1,6 @@
 import { Warning, InternalInterpreterError, EvaluationError } from './errors';
 import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
-import { PrintOptions } from './basic';
+import { PrintOptions, InterpreterOptions } from './basic';
 import { Type, CustomType, FunctionType } from './types';
 import { Value, ReferenceValue, ValueConstructor, ExceptionConstructor } from './values';
 import { Expression } from './expressions';
@@ -12,6 +12,35 @@ export enum IdentifierStatus {
     VALUE_VARIABLE,
     VALUE_CONSTRUCTOR,
     EXCEPTION_CONSTRUCTOR
+}
+
+export abstract class Declaration {
+    id: number;
+    elaborate(state: State,
+              tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
+              nextName: string = '\'*t0',
+              paramBindings: Map<string, Type> = new Map<string, Type>(),
+              isTopLevel: boolean = false,
+              options: InterpreterOptions = {}):
+                [State, Warning[], Map<string, [Type, boolean]>, string] {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    evaluate(params: EvaluationParameters, callStack: EvaluationStack): EvaluationResult {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    toString(): string {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    simplify(): Declaration {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+        return new Set<string>();
+    }
 }
 
 export type EvaluationResult = {

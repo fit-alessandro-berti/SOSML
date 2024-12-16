@@ -1,5 +1,9 @@
+import { InternalInterpreterError, IncompleteError, ParserError, FeatureDisabledError } from './errors';
+import { Token, KeywordToken, IdentifierToken, ConstantToken, RealConstantToken,
+         TypeVariableToken, LongIdentifierToken, IntegerConstantToken,
+         AlphanumericIdentifierToken, NumericToken, StarToken } from './tokens';
 import { InterpreterOptions } from './basic';
-import { State, Structure } from './state';
+import { State, Structure, Declaration } from './state';
 import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          LayeredPattern, FunctionApplication, TypedExpression, Record, List, Vector,
          Sequence, RecordSelector, Lambda, Conjunction, LocalDeclarationExpression,
@@ -7,11 +11,7 @@ import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          HandleException, Match, InfixExpression, PatternExpression, While,
          ConjunctivePattern, DisjunctivePattern, PatternGuard, NestedMatch } from './expressions';
 import { Type, RecordType, TypeVariable, TupleType, CustomType, FunctionType } from './types';
-import { InternalInterpreterError, IncompleteError, ParserError, FeatureDisabledError } from './errors';
-import { Token, KeywordToken, IdentifierToken, ConstantToken, RealConstantToken,
-         TypeVariableToken, LongIdentifierToken, IntegerConstantToken,
-         AlphanumericIdentifierToken, NumericToken, StarToken } from './tokens';
-import { EmptyDeclaration, Declaration, ValueBinding, ValueDeclaration,
+import { EmptyDeclaration, ValueBinding, ValueDeclaration,
          FunctionValueBinding, FunctionDeclaration, TypeDeclaration, Evaluation,
          DatatypeReplication, DatatypeDeclaration, SequentialDeclaration,
          DatatypeBinding, TypeBinding, AbstypeDeclaration, LocalDeclaration,

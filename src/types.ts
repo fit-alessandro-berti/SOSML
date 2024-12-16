@@ -1,7 +1,7 @@
 import { ElaborationError, InternalInterpreterError } from './errors';
-import { State } from './state';
 import { LongIdentifierToken } from './tokens';
 import { InterpreterOptions, PrintOptions } from './basic';
+import { State } from './state';
 
 let unicodeTyVarNames: Map<string, string> = new Map<string, string>([
     ['\'a', 'α'], ['\'b', 'β'], ['\'c', 'γ'], ['\'d', 'δ'], ['\'e', 'ε'], ['\'f', 'ζ'],
