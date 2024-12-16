@@ -6,9 +6,8 @@ import { Type, TypeVariable, FunctionType, CustomType, TypeVariableBind } from '
 import { ValueConstructor, ExceptionConstructor } from './values';
 import { State } from './state';
 import { DynamicBasis, StaticBasis, TypeInformation } from './state';
-import { ValueIdentifier, CaseAnalysis, Lambda, Match,
-         TypedExpression, Tuple, PatternExpression, Expression } from './expressions';
-import { ValueDeclaration, ValueBinding } from './declarations0';
+import { CaseAnalysis, Lambda, Tuple } from './expressions';
+import { ValueDeclaration, ValueBinding, PatternExpression, Expression, ValueIdentifier, Match, TypedExpression } from './declarations0';
 
 export { ValueDeclaration, ValueBinding };
 

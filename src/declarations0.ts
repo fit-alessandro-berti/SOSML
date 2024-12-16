@@ -4,7 +4,6 @@ import { InterpreterOptions, IdentifierStatus, EvaluationResult, EvaluationStack
 import { Token, LongIdentifierToken } from './tokens';
 import { ExceptionValue, FunctionValue, ValueConstructor, ExceptionConstructor } from './values';
 import { Type, TypeVariable, TypeVariableBind, FunctionType, CustomType, AnyType } from './types';
-import { Wildcard } from './expressions';
 import { State } from './state';
 
 
@@ -481,7 +480,7 @@ export class Match {
     getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
-            isPattern: boolean = false, checkEx: boolean = true,
+            isPattern: boolean = false, checkEx: boolean = false,
             paramBindings: Map<string, Type> = new Map<string, Type>()):
     [Type, Warning[], string, Set<string>, Map<string, [Type, boolean]>, IdCnt] {
 
@@ -595,11 +594,12 @@ export class Match {
         return [restp, warns, nextName, tyVars, bnds, state.valueIdentifierId];
     }
 
-    checkExhaustiveness(state: any): Warning[] {
-        return new Wildcard().cover(state,
+    checkExhaustiveness(state: any): any {
+        // TODO ALE BERTI
+		/*return new Wildcard().cover(state,
                                       this.matches.map((a: [PatternExpression, Expression]) => {
             return a[0];
-        }));
+        }));*/
     }
 
     simplify(): Match {
