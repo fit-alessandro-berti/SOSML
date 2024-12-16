@@ -1,10 +1,9 @@
-import { InterpreterOptions } from './basic';
+import { InterpreterOptions, IdentifierStatus, EvaluationParameters, Value } from './basic';
 import { State } from './state';
-import { StaticBasis, DynamicBasis, InfixStatus, TypeInformation,
-         IdentifierStatus, EvaluationParameters } from './state';
+import { StaticBasis, DynamicBasis, InfixStatus, TypeInformation } from './state';
 import { FunctionType, CustomType, TupleType, Type, TypeVariable, TypeVariableBind } from './types';
 import { CharValue, Real, Integer, StringValue, PredefinedFunction, Word, ConstructedValue,
-         ValueConstructor, ExceptionConstructor, BoolValue, Value, RecordValue, ReferenceValue } from './values';
+         ValueConstructor, ExceptionConstructor, BoolValue, RecordValue, ReferenceValue } from './values';
 import { InternalInterpreterError, Warning } from './errors';
 
 // Initial static basis (see SML Definition, appendix C through E)

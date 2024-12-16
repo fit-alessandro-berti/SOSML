@@ -1,6 +1,7 @@
-import { State, IdentifierStatus, EvaluationParameters } from '../state';
+import { IdentifierStatus, EvaluationParameters, Value } from '../basic';
+import { State } from '../state';
 import { FunctionType } from '../types';
-import { CharValue, Integer, PredefinedFunction, Value } from '../values';
+import { CharValue, Integer, PredefinedFunction } from '../values';
 import { InternalInterpreterError } from '../errors';
 import { Module, charType, intType, chrException } from '../stdlib';
 

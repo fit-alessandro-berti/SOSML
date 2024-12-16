@@ -1,4 +1,5 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
+import { IdentifierStatus } from '../basic';
+import { State, DynamicBasis, StaticBasis } from '../state';
 import { TypeVariable, TypeVariableBind, FunctionType, CustomType, TupleType } from '../types';
 import { ValueConstructor } from '../values';
 import { Module } from '../stdlib';

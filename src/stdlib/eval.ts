@@ -1,6 +1,7 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationStack, EvaluationParameters, EvaluationResult, Declaration } from '../state';
+import { IdentifierStatus, EvaluationParameters, EvaluationResult, Declaration, EvaluationStack, Value } from '../basic';
+import { State, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType, TupleType } from '../types';
-import { PredefinedFunction, StringValue, Value, RecordValue } from '../values';
+import { PredefinedFunction, StringValue, RecordValue } from '../values';
 import { InternalInterpreterError, Warning } from '../errors';
 import * as Lexer from '../lexer';
 import * as Parser from '../parser';

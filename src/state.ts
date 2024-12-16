@@ -1,72 +1,8 @@
 import { Warning, InternalInterpreterError, EvaluationError } from './errors';
 import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
-import { PrintOptions, InterpreterOptions, IState } from './basic';
+import { PrintOptions, IState, IdentifierStatus, Value } from './basic';
 import { Type, CustomType, FunctionType } from './types';
-import { Value, ReferenceValue, ValueConstructor, ExceptionConstructor } from './values';
-
-export type IdCnt = { [name: string]: number };
-export type MemBind = [number, Value][];
-
-export enum IdentifierStatus {
-    VALUE_VARIABLE,
-    VALUE_CONSTRUCTOR,
-    EXCEPTION_CONSTRUCTOR
-}
-
-export abstract class Declaration {
-    id: number;
-    elaborate(state: IState,
-              tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
-              nextName: string = '\'*t0',
-              paramBindings: Map<string, Type> = new Map<string, Type>(),
-              isTopLevel: boolean = false,
-              options: InterpreterOptions = {}):
-                [IState, Warning[], Map<string, [Type, boolean]>, string] {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    evaluate(params: EvaluationParameters, callStack: EvaluationStack): EvaluationResult {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    toString(): string {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    simplify(): Declaration {
-        throw new InternalInterpreterError( 'Not yet implemented.');
-    }
-
-    assertUniqueBinding(state: IState, conn: Set<string>): Set<string> {
-        return new Set<string>();
-    }
-}
-
-export type EvaluationResult = {
-    'value': Value | undefined,
-    'hasThrown': boolean,
-    'newState': any,
-} | undefined;
-
-export type EvaluationParameters = {
-    [name: string]: any,
-    'state': IState,
-    'modifiable': IState,
-    'recResult': EvaluationResult
-};
-
-export type EvaluationStack = {
-    'next': any,
-    'params': EvaluationParameters
-}[];
-
-export interface Structure {
-    computeStructure(params: EvaluationParameters, callStack: EvaluationStack, recCall: Declaration):
-        DynamicBasis | Value | undefined;
-    elaborate(state: IState, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
-              paramBindings: Map<string, Type>):
-        [StaticBasis, Warning[], Map<string, [Type, boolean]>, string];
-}
+import { ReferenceValue, ValueConstructor, ExceptionConstructor } from './values';
 
 // maps id to [Value, rebindable, intermediate]
 export type DynamicValueEnvironment = { [name: string]: [Value, IdentifierStatus] };

@@ -1,8 +1,8 @@
 import { IState as State } from './basic';
-import { IdentifierStatus, EvaluationParameters } from './state';
+import { IdentifierStatus, EvaluationParameters, Value, PrintCounter } from './basic';
 import { InternalInterpreterError } from './errors';
 import { CustomType, FunctionType } from './types';
-import { Value, PredefinedFunction, PrintCounter, StringValue, ExceptionValue,
+import { PredefinedFunction, StringValue, ExceptionValue,
          ExceptionConstructor } from './values';
 import { InterpreterOptions } from './basic';
 import * as Interpreter from './main';

@@ -1,6 +1,7 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
+import { IdentifierStatus, EvaluationParameters, Value } from '../basic';
+import { State, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType, TupleType } from '../types';
-import { Integer, PredefinedFunction, Value } from '../values';
+import { Integer, PredefinedFunction } from '../values';
 import { Module, intType } from '../stdlib';
 
 function addRandomLib(state: State): State {

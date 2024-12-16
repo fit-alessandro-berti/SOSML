@@ -15,11 +15,11 @@ let AST = instance.lexParse(..code..);
 
 import { InterpreterOptions } from './basic';
 import { IState as State } from './basic';
+import { Value } from './basic';
 import { getInitialState } from './initialState';
 import { loadModule, STDLIB } from './stdlib';
 import { InternalInterpreterError, Warning } from './errors';
 import { Type } from './types';
-import { Value } from './values';
 import * as Lexer from './lexer';
 import * as Parser from './parser';
 import * as Evaluator from './evaluator';

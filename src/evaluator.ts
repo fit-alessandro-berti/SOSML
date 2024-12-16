@@ -1,6 +1,5 @@
 import { InternalInterpreterError } from './errors';
-import { IState as State } from './basic';
-import { EvaluationResult, EvaluationStack, Declaration } from './state';
+import { IState as State, EvaluationResult, EvaluationStack, Declaration } from './basic';
 
 export function evaluate(state: State, ast: Declaration): EvaluationResult {
     let modifiable = state.getNestedState();

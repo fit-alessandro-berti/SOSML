@@ -4,7 +4,7 @@ import { Token, KeywordToken, IdentifierToken, ConstantToken, RealConstantToken,
          AlphanumericIdentifierToken, NumericToken, StarToken } from './tokens';
 import { InterpreterOptions } from './basic';
 import { IState as State } from './basic';
-import { Structure, Declaration } from './state';
+import { Structure, Declaration } from './basic';
 import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          LayeredPattern, FunctionApplication, TypedExpression, Record, List, Vector,
          Sequence, RecordSelector, Lambda, Conjunction, LocalDeclarationExpression,

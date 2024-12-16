@@ -1,5 +1,5 @@
 // fine
-import { Warning } from './errors';
+import { Warning, InternalInterpreterError } from './errors';
 import { Token, LongIdentifierToken } from './tokens';
 
 export let MAXINT = 1073741823;
@@ -131,4 +131,85 @@ export interface IState {
     setValueIdentifierId(name: string, setTo: number, atId?: number): void;
     addWarning(warn: Warning, atId?: number): void;
     setWarnings(warns: Warning[], atId?: number): void;
+}
+
+export class PrintCounter {
+    constructor(public charactersLeft: number) {
+    }
+}
+
+export abstract class Value {
+    abstract typeName(): string;
+
+    abstract pcToString(state: any, pc: PrintCounter): string;
+    toString(state: any, length: number = 120): string {
+        return this.pcToString(state, new PrintCounter(length));
+    }
+    equals(other: Value): boolean {
+        throw new InternalInterpreterError('Tried comparing incomparable things.');
+    }
+}
+
+export type IdCnt = { [name: string]: number };
+export type MemBind = [number, Value][];
+
+export enum IdentifierStatus {
+    VALUE_VARIABLE,
+    VALUE_CONSTRUCTOR,
+    EXCEPTION_CONSTRUCTOR
+}
+
+export abstract class Declaration {
+    id: number;
+    elaborate(state: IState,
+              tyVarBnd: any = new Map<string, any>(),
+              nextName: string = '\'*t0',
+              paramBindings: Map<string, any> = new Map<string, any>(),
+              isTopLevel: boolean = false,
+              options: InterpreterOptions = {}):
+                any {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    evaluate(params: EvaluationParameters, callStack: EvaluationStack): EvaluationResult {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    toString(): string {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    simplify(): Declaration {
+        throw new InternalInterpreterError( 'Not yet implemented.');
+    }
+
+    assertUniqueBinding(state: IState, conn: Set<string>): Set<string> {
+        return new Set<string>();
+    }
+}
+
+export type EvaluationResult = {
+    'value': Value | undefined,
+    'hasThrown': boolean,
+    'newState': any,
+} | undefined;
+
+export type EvaluationParameters = {
+    [name: string]: any,
+    'state': IState,
+    'modifiable': IState,
+    'recResult': EvaluationResult
+};
+
+export type EvaluationStack = {
+    'next': any,
+    'params': EvaluationParameters
+}[];
+
+export interface Structure {
+    computeStructure(params: EvaluationParameters, callStack: EvaluationStack, recCall: Declaration):
+        any;
+    elaborate(state: IState, tyVarBnd: any, nextName: string,
+              paramBindings: any):
+        any;
 }

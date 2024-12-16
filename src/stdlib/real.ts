@@ -1,6 +1,7 @@
-import { State, IdentifierStatus, DynamicBasis, StaticBasis, EvaluationParameters } from '../state';
+import { IdentifierStatus, EvaluationParameters, Value } from '../basic';
+import { State, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType } from '../types';
-import { Real, Integer, PredefinedFunction, StringValue, Value } from '../values';
+import { Real, Integer, PredefinedFunction, StringValue } from '../values';
 import { InternalInterpreterError } from '../errors';
 import { Module, intType, realType, overflowException, stringType } from '../stdlib';
 

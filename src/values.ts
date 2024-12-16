@@ -5,26 +5,9 @@
 import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';
 import { MININT, MAXINT } from './basic';
-import { IState as State } from './basic';
-import { IdentifierStatus, EvaluationStack, EvaluationParameters } from './state';
+import { IState as State, EvaluationStack, EvaluationParameters, IdentifierStatus, PrintCounter } from './basic';
+import { Value } from './basic';
 import { Match } from './expressions';
-
-export class PrintCounter {
-    constructor(public charactersLeft: number) {
-    }
-}
-
-export abstract class Value {
-    abstract typeName(): string;
-
-    abstract pcToString(state: State|undefined|undefined, pc: PrintCounter): string;
-    toString(state: State|undefined|undefined, length: number = 120): string {
-        return this.pcToString(state, new PrintCounter(length));
-    }
-    equals(other: Value): boolean {
-        throw new InternalInterpreterError('Tried comparing incomparable things.');
-    }
-}
 
 export class ReferenceValue extends Value {
     constructor(public address: number) {
