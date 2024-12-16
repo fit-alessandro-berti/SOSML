@@ -1,4 +1,4 @@
-// safe
+// 06 -- safe
 
 import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';

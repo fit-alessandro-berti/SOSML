@@ -1,4 +1,4 @@
-// fine
+// 02 -- fine
 
 // SML uses these types and we may have to emulate them more closely, in particular int
 export type char = string;

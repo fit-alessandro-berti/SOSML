@@ -1,4 +1,4 @@
-// fine
+// 04 -- fine
 
 import { LexerError, InternalInterpreterError, IncompleteError } from './errors';
 import { int, char, Token, KeywordToken, WordConstantToken, CharacterConstantToken,

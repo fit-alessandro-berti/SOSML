@@ -1,3 +1,5 @@
+// 07 -- safe
+
 import { Warning, InternalInterpreterError, EvaluationError } from './errors';
 import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
 import { PrintOptions, IState, IdentifierStatus, Value } from './basic';
