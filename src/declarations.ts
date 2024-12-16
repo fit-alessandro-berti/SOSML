@@ -8,7 +8,9 @@ import { State } from './state';
 import { DynamicBasis, StaticBasis, TypeInformation } from './state';
 import { ValueIdentifier, CaseAnalysis, Lambda, Match,
          TypedExpression, Tuple, PatternExpression, Expression } from './expressions';
-import { ValueDeclaration, ValueBinding, } from './declarations0';
+import { ValueDeclaration, ValueBinding } from './declarations0';
+
+export { ValueDeclaration, ValueBinding };
 
 export class TypeDeclaration extends Declaration {
 // type typeBinding
