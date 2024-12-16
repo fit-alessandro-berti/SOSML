@@ -1,6 +1,7 @@
 import { State, IdentifierStatus, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType } from '../types';
-import { Integer, PredefinedFunction,  StringValue, Value, MAXINT, MININT } from '../values';
+import { MAXINT, MININT } from '../basic';
+import { Integer, PredefinedFunction,  StringValue, Value } from '../values';
 import { InternalInterpreterError } from '../errors';
 import { EvaluationParameters } from '../evaluator';
 import { Module, intType, stringType } from '../stdlib';

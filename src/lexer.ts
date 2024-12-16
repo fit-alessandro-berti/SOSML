@@ -1,10 +1,11 @@
+// fine
+
 import { LexerError, InternalInterpreterError, IncompleteError } from './errors';
 import { int, char, Token, KeywordToken, WordConstantToken, CharacterConstantToken,
          StringConstantToken, IdentifierToken, AlphanumericIdentifierToken, TypeVariableToken,
          EqualityTypeVariableToken, StarToken, EqualsToken, NumericToken, LongIdentifierToken,
          RealConstantToken, IntegerConstantToken, CommentToken } from './tokens';
-import { MAXINT, MININT } from './values';
-import { InterpreterOptions } from './main';
+import { MAXINT, MININT, InterpreterOptions } from './basic';
 
 let reservedWords: Set<string> = new Set<string>([
     'abstype', 'and', 'andalso', 'as', 'case', 'datatype', 'do', 'else', 'end', 'exception', 'fn',

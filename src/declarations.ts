@@ -1,3 +1,4 @@
+import { InterpreterOptions } from './basic';
 import { Expression, ValueIdentifier, CaseAnalysis, Lambda, Match,
          Pattern, TypedExpression, Tuple, PatternExpression } from './expressions';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
@@ -8,7 +9,6 @@ import { InternalInterpreterError, ElaborationError,
 import { Value, ValueConstructor, ExceptionConstructor, ExceptionValue,
          FunctionValue } from './values';
 import { IdCnt, EvaluationResult, EvaluationStack, EvaluationParameters } from './evaluator';
-import { InterpreterOptions } from './main';
 
 export abstract class Declaration {
     id: number;

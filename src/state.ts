@@ -4,7 +4,7 @@ import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
 import { Warning, InternalInterpreterError, EvaluationError } from './errors';
 import { Structure } from './modules';
 import { Expression } from './expressions';
-import { PrintOptions } from './main';
+import { PrintOptions } from './basic';
 
 export enum IdentifierStatus {
     VALUE_VARIABLE,

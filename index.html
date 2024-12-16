@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="build/interpreter.js"></script>
+    </head>
+    <body>
+        <script>
+            let initialState = Interpreter.getFirstState();
+            let interpretationResult = Interpreter.interpret('val x = "Hello World!";', initialState);
+            console.log(interpretationResult.state.toString({stopId: initialState.id + 1}));
+            interpretationResult = Interpreter.interpret('fun f y = x | f 10 = "???";', interpretationResult.state);
+            console.log(interpretationResult.warnings);
+        </script>
+    </body>
+</html>

@@ -1,3 +1,5 @@
+// fine
+
 // SML uses these types and we may have to emulate them more closely, in particular int
 export type char = string;
 export type int = number;

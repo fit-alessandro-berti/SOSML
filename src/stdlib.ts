@@ -3,6 +3,7 @@ import { InternalInterpreterError } from './errors';
 import { CustomType, FunctionType } from './types';
 import { Value, PredefinedFunction, PrintCounter, StringValue, ExceptionValue,
          ExceptionConstructor } from './values';
+import { InterpreterOptions } from './basic';
 import * as Interpreter from './main';
 import { EvaluationParameters } from './evaluator';
 
@@ -36,7 +37,7 @@ export let subscriptException = new ExceptionConstructor('Subscript', 0, 0, 7);
 export let failException = new ExceptionConstructor('Fail', 1, 0, 8);
 
 export type Module = {
-    'native': ((state: State, options?: Interpreter.InterpreterOptions) => State) | undefined, /* callback for native parts */
+    'native': ((state: State, options?: InterpreterOptions) => State) | undefined, /* callback for native parts */
     'code': string | undefined,
     'requires': string[] | undefined /* names of modules required for this module (excluding __Base) */
 };
@@ -154,7 +155,7 @@ export let STDLIB: {
     'Vector': VECTOR_LIB
 };
 
-export function loadModule(state: State, name: string, options: Interpreter.InterpreterOptions): State {
+export function loadModule(state: State, name: string, options: InterpreterOptions): State {
     if (!STDLIB.hasOwnProperty(name)) {
         throw new InternalInterpreterError('The module "' + name + '" does not exist. Auuuu~');
     }

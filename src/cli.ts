@@ -2,7 +2,8 @@
 // Build with `npm run cli`
 // Run with `node sosml_cli.js`
 
-import { getFirstState, interpret, InterpreterOptions, PrintOptions } from './main';
+import { InterpreterOptions, PrintOptions } from './basic';
+import { getFirstState, interpret } from './main';
 import { IncompleteError } from './errors';
 
 const {performance} = require('perf_hooks');

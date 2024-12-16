@@ -7,9 +7,7 @@ import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';
 import { Match } from './expressions';
 import { EvaluationStack, EvaluationParameters } from './evaluator';
-
-export let MAXINT = 1073741823;
-export let MININT = -1073741824;
+import { MININT, MAXINT } from './basic';
 
 export class PrintCounter {
     constructor(public charactersLeft: number) {
