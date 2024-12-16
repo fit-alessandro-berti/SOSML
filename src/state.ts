@@ -1,9 +1,8 @@
 import { Warning, InternalInterpreterError, EvaluationError } from './errors';
 import { Token, IdentifierToken, LongIdentifierToken } from './tokens';
-import { PrintOptions, InterpreterOptions } from './basic';
+import { PrintOptions, InterpreterOptions, IState } from './basic';
 import { Type, CustomType, FunctionType } from './types';
 import { Value, ReferenceValue, ValueConstructor, ExceptionConstructor } from './values';
-import { Expression } from './expressions';
 
 export type IdCnt = { [name: string]: number };
 export type MemBind = [number, Value][];
@@ -46,7 +45,7 @@ export abstract class Declaration {
 export type EvaluationResult = {
     'value': Value | undefined,
     'hasThrown': boolean,
-    'newState': IState | undefined,
+    'newState': any,
 } | undefined;
 
 export type EvaluationParameters = {
@@ -112,7 +111,7 @@ export type StaticSignatureEnvironment = { [name: string]: StaticBasis };
 
 export class DynamicFunctorInformation {
     constructor(public paramName: IdentifierToken, public param: DynamicInterface,
-                public body: Expression & Structure, public state: IState) {
+                public body: any, public state: IState) {
     }
 }
 
@@ -406,99 +405,6 @@ export class StaticBasis {
 
 export type Memory = [number, {[address: number]: Value}];
 export type FreeTypeVariableInformation = [number, Map<string, [Type, boolean]>];
-
-export interface IState {
-    // Public fields
-    id: number;
-    parent: IState | undefined;
-    staticBasis: StaticBasis;
-    dynamicBasis: DynamicBasis;
-    memory: Memory;
-    exceptionEvalId: number;
-    freeTypeVariables: FreeTypeVariableInformation;
-    valueIdentifierId: { [name: string]: number };
-    warns: Warning[];
-    insideLocalDeclBody: boolean;
-    localDeclStart: boolean;
-    loadedModules: string[];
-	infixEnvironment: InfixEnvironment;
-
-    // Public methods
-    printBinding(
-        name: string,
-        value: [Value, IdentifierStatus] | undefined,
-        type: [Type, IdentifierStatus] | undefined,
-        options?: PrintOptions,
-        acon?: boolean
-    ): string;
-
-    printBasis(
-        dynamicBasis: DynamicBasis | undefined,
-        staticBasis: StaticBasis | undefined,
-        options?: PrintOptions,
-        indent?: number
-    ): string;
-
-    toString(options?: PrintOptions): string;
-
-    getNestedState(newId?: number): IState;
-
-    hasModule(name: string): boolean;
-    registerModule(name: string): void;
-
-    getIdChanges(stopId: number): { [name: string]: number };
-    getMemoryChanges(stopId: number): [number, Value][];
-    getDynamicChanges(stopId: number): DynamicBasis;
-    getDynamicLocalDeclChanges(stopId: number): DynamicBasis;
-    getStaticChanges(stopId: number): StaticBasis;
-
-    getCell(address: number): Value | undefined;
-    getTypeVariableBinds(idLimit?: number): FreeTypeVariableInformation;
-
-    getStaticValue(name: string, idLimit?: number): [Type, IdentifierStatus] | undefined;
-    getStaticType(name: string, idLimit?: number): TypeInformation | undefined;
-    getStaticStructure(name: string, idLimit?: number): StaticBasis | undefined;
-    getAndResolveStaticStructure(name: LongIdentifierToken, idLimit?: number): StaticBasis | undefined;
-    getStaticSignature(name: string, idLimit?: number): StaticBasis | undefined;
-    getStaticFunctor(name: string, idLimit?: number): [StaticBasis, StaticBasis, string, boolean] | undefined;
-
-    getDynamicValue(name: string, idLimit?: number): [Value, IdentifierStatus] | undefined;
-    getDynamicType(name: string, idLimit?: number): string[] | undefined;
-    getDynamicStructure(name: string, idLimit?: number): DynamicBasis | undefined;
-    getAndResolveDynamicStructure(name: LongIdentifierToken, idLimit?: number): DynamicBasis | undefined;
-    getDynamicSignature(name: string, idLimit?: number): DynamicInterface | undefined;
-    getDynamicFunctor(name: string, idLimit?: number): DynamicFunctorInformation | undefined;
-
-    getInfixStatus(id: Token, idLimit?: number): InfixStatus;
-
-    getValueIdentifierId(name: string, idLimit?: number): number;
-    getWarnings(): Warning[];
-
-    incrementValueIdentifierId(name: string, atId?: number): void;
-    setCell(address: number, value: Value): void;
-    setNewCell(value: Value): ReferenceValue;
-    getNextExceptionEvalId(): number;
-
-    deleteStaticValue(name: string): void;
-    setStaticValue(name: string, type: Type, is: IdentifierStatus, atId?: number): void;
-    setStaticType(name: string, type: Type, constructors: string[], arity: number, allowsEquality: boolean, atId?: number): void;
-    setStaticStructure(name: string, structure: StaticBasis, atId?: number): void;
-    setStaticSignature(name: string, signature: StaticBasis, atId?: number): void;
-    setStaticFunctor(name: string, functor: [StaticBasis, StaticBasis, string], openParameter?: boolean, atId?: number): void;
-
-    setDynamicValue(name: string, value: Value, is: IdentifierStatus, atId?: number): void;
-    setDynamicType(name: string, constructors: string[], atId?: number): void;
-    setDynamicStructure(name: string, structure: DynamicBasis, atId?: number): void;
-    setDynamicSignature(name: string, signature: DynamicInterface, atId?: number): void;
-    setDynamicFunctor(name: string, functor: DynamicFunctorInformation, atId?: number): void;
-
-    setInfixStatus(id: Token, precedence: number, rightAssociative: boolean, infix: boolean, atId?: number): void;
-
-    setValueIdentifierId(name: string, setTo: number, atId?: number): void;
-    addWarning(warn: Warning, atId?: number): void;
-    setWarnings(warns: Warning[], atId?: number): void;
-}
-
 
 export class State implements IState {
     static allowsRebind(name: string): boolean {

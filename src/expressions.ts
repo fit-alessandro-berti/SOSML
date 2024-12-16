@@ -6,8 +6,8 @@ import { Token, IdentifierToken, ConstantToken, IntegerConstantToken, RealConsta
 import { EvaluationResult, EvaluationParameters, EvaluationStack, IdCnt, Declaration } from './state';
 import { TypeVariable, RecordType, Type, FunctionType, CustomType, AnyType, TypeVariableBind } from './types';
 import { ValueBinding, ValueDeclaration } from './declarations';
-
-import { State, IdentifierStatus } from './state';
+import { State } from './state';
+import { IdentifierStatus } from './state';
 import { Value, CharValue, StringValue, Integer, Real, Word, ValueConstructor,
          ExceptionConstructor, PredefinedFunction, RecordValue, FunctionValue,
          ExceptionValue, ConstructedValue, ReferenceValue, VectorValue } from './values';

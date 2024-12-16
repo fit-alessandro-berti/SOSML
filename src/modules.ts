@@ -1,8 +1,8 @@
 import { Warning, EvaluationError, ElaborationError, InternalInterpreterError } from './errors';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
+import { IState as State } from './basic';
 import { Expression } from './expressions';
 import { Type, TypeVariable, CustomType, TypeVariableBind, FunctionType } from './types';
-import { IState as State } from './state';
 import { DynamicInterface, DynamicStructureInterface, DynamicValueInterface, StaticBasis,
          DynamicTypeInterface, IdentifierStatus, DynamicBasis, DynamicFunctorInformation,
          TypeInformation, Structure, EvaluationResult, EvaluationParameters, EvaluationStack, Declaration } from './state';

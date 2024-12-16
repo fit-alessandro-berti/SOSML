@@ -14,7 +14,7 @@ let AST = instance.lexParse(..code..);
 */
 
 import { InterpreterOptions } from './basic';
-import { IState as State } from './state';
+import { IState as State } from './basic';
 import { getInitialState } from './initialState';
 import { loadModule, STDLIB } from './stdlib';
 import { InternalInterpreterError, Warning } from './errors';

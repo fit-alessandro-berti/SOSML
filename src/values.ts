@@ -5,7 +5,7 @@
 import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';
 import { MININT, MAXINT } from './basic';
-import { IState as State } from './state';
+import { IState as State } from './basic';
 import { IdentifierStatus, EvaluationStack, EvaluationParameters } from './state';
 import { Match } from './expressions';
 

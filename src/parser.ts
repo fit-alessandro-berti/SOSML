@@ -3,7 +3,7 @@ import { Token, KeywordToken, IdentifierToken, ConstantToken, RealConstantToken,
          TypeVariableToken, LongIdentifierToken, IntegerConstantToken,
          AlphanumericIdentifierToken, NumericToken, StarToken } from './tokens';
 import { InterpreterOptions } from './basic';
-import { IState as State } from './state';
+import { IState as State } from './basic';
 import { Structure, Declaration } from './state';
 import { Expression, Tuple, Constant, ValueIdentifier, Wildcard,
          LayeredPattern, FunctionApplication, TypedExpression, Record, List, Vector,
