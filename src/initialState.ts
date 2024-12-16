@@ -1,5 +1,6 @@
 import { InterpreterOptions } from './basic';
-import { State, StaticBasis, DynamicBasis, InfixStatus, TypeInformation,
+import { State } from './state';
+import { StaticBasis, DynamicBasis, InfixStatus, TypeInformation,
          IdentifierStatus, EvaluationParameters } from './state';
 import { FunctionType, CustomType, TupleType, Type, TypeVariable, TypeVariableBind } from './types';
 import { CharValue, Real, Integer, StringValue, PredefinedFunction, Word, ConstructedValue,

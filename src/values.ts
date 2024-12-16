@@ -5,7 +5,8 @@
 import { InternalInterpreterError, EvaluationError, Warning } from './errors';
 import { int, char, IdentifierToken } from './tokens';
 import { MININT, MAXINT } from './basic';
-import { State, IdentifierStatus, EvaluationStack, EvaluationParameters } from './state';
+import { IState as State } from './state';
+import { IdentifierStatus, EvaluationStack, EvaluationParameters } from './state';
 import { Match } from './expressions';
 
 export class PrintCounter {

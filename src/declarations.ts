@@ -3,6 +3,7 @@ import { Expression, ValueIdentifier, CaseAnalysis, Lambda, Match,
          Pattern, TypedExpression, Tuple, PatternExpression } from './expressions';
 import { IdentifierToken, Token, LongIdentifierToken } from './tokens';
 import { Type, TypeVariable, FunctionType, CustomType, TypeVariableBind } from './types';
+import { IState } from './state';
 import { State, IdentifierStatus, DynamicBasis, StaticBasis, TypeInformation, EvaluationResult, EvaluationStack, EvaluationParameters, IdCnt, Declaration } from './state';
 import { InternalInterpreterError, ElaborationError,
          EvaluationError, FeatureDisabledError, Warning } from './errors';
@@ -17,7 +18,7 @@ export class ValueDeclaration extends Declaration {
         super();
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         for (let i = 0; i < this.valueBinding.length; ++i) {
             this.valueBinding[i].pattern.assertUniqueBinding(state, conn);
             this.valueBinding[i].expression.assertUniqueBinding(state, conn);
@@ -35,7 +36,7 @@ export class ValueDeclaration extends Declaration {
         return new ValueDeclaration(this.typeVariableSequence, valBnd, this.id);
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean,
               options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
@@ -331,7 +332,7 @@ export class TypeDeclaration extends Declaration {
         return new TypeDeclaration(bnds, this.id);
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean,
               options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
@@ -425,7 +426,7 @@ export class DatatypeDeclaration extends Declaration {
         return new DatatypeDeclaration(datbnd, undefined, this.id);
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean,
               options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
@@ -530,7 +531,7 @@ export class DatatypeReplication extends Declaration {
         return this;
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean,
               options: InterpreterOptions):
     [State, Warning[], Map<string, [Type, boolean]>, string] {
@@ -603,7 +604,7 @@ export class ExceptionDeclaration extends Declaration {
         return 'exception <stuff>;';
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean,
               options: InterpreterOptions):
     [State, Warning[], Map<string, [Type, boolean]>, string] {
@@ -641,7 +642,7 @@ export class LocalDeclaration extends Declaration {
         super();
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         this.declaration.assertUniqueBinding(state, conn);
         this.body.assertUniqueBinding(state, conn);
         return new Set<string>();
@@ -651,11 +652,11 @@ export class LocalDeclaration extends Declaration {
         return new LocalDeclaration(this.declaration.simplify(), this.body.simplify(), this.id);
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean,
               options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
-        let nstate: [State, Warning[], Map<string, [Type, boolean]>, string]
+        let nstate: [IState, Warning[], Map<string, [Type, boolean]>, string]
             = [state.getNestedState(0).getNestedState(state.id), [], tyVarBnd, nextName];
 
         let nparbnd = new Map<string, Type>();
@@ -763,7 +764,7 @@ export class OpenDeclaration extends Declaration {
         return this;
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean, options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
         for (let i = 0; i < this.names.length; ++i) {
@@ -830,7 +831,7 @@ export class EmptyDeclaration extends Declaration {
         return this;
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean, options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
         return [state, [], tyVarBnd, nextName];
@@ -855,7 +856,7 @@ export class SequentialDeclaration extends Declaration {
         super();
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         for (let i = 0; i < this.declarations.length; ++i) {
             this.declarations[i].assertUniqueBinding(state, conn);
         }
@@ -870,7 +871,7 @@ export class SequentialDeclaration extends Declaration {
         return new SequentialDeclaration(decls, this.id);
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>, isTopLevel: boolean, options: InterpreterOptions):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
         let warns: Warning[] = [];
@@ -1090,13 +1091,13 @@ export class InfixDeclaration extends Declaration {
         return this;
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
         return [state, [], tyVarBnd, nextName];
     }
 
-    setInfixStatus(state: State): void {
+    setInfixStatus(state: any): void {
         for (let i = 0; i < this.operators.length; ++i) {
             state.setInfixStatus(this.operators[i], this.precedence, false, true);
         }
@@ -1133,13 +1134,13 @@ export class InfixRDeclaration extends Declaration {
         return this;
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
         return [state, [], tyVarBnd, nextName];
     }
 
-    setInfixStatus(state: State): void {
+    setInfixStatus(state: any): void {
         for (let i = 0; i < this.operators.length; ++i) {
             state.setInfixStatus(this.operators[i], this.precedence, true, true);
         }
@@ -1176,13 +1177,13 @@ export class NonfixDeclaration extends Declaration {
         return this;
     }
 
-    elaborate(state: State, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
+    elaborate(state: any, tyVarBnd: Map<string, [Type, boolean]>, nextName: string,
               paramBindings: Map<string, Type>):
         [State, Warning[], Map<string, [Type, boolean]>, string] {
         return [state, [], tyVarBnd, nextName];
     }
 
-    setInfixStatus(state: State): void {
+    setInfixStatus(state: any): void {
         for (let i = 0; i < this.operators.length; ++i) {
             state.setInfixStatus(this.operators[i], 0, false, false);
         }
@@ -1225,7 +1226,7 @@ export class ValueBinding {
         return res + this.expression;
     }
 
-    getType(tyVarSeq: TypeVariable[], state: State, tyVarBnd: Map<string, [Type, boolean]>,
+    getType(tyVarSeq: TypeVariable[], state: any, tyVarBnd: Map<string, [Type, boolean]>,
             nextName: string, paramBindings: Map<string, Type>, isTopLevel: boolean):
             [[string, Type][], Warning[], Map<string, [Type, boolean]>, string, IdCnt] {
         let nstate = state.getNestedState(state.id);
@@ -1443,7 +1444,7 @@ export class DatatypeBinding {
                 public givenIds: {[name: string]: number} = {}) {
     }
 
-    getType(state: State, isTopLevel: boolean, paramBindings: Map<string, Type>,
+    getType(state: any, isTopLevel: boolean, paramBindings: Map<string, Type>,
             simplified: boolean = false):
         [[string, Type][], Type, [string, string[]]] {
         let connames: string[] = [];
@@ -1500,7 +1501,7 @@ export class DatatypeBinding {
         return [ve, restp, [this.name.getText(), connames]];
     }
 
-    compute(state: State, modifiable: State): [[string, Value][], [string, string[]]] {
+    compute(state: any, modifiable: any): [[string, Value][], [string, string[]]] {
         let connames: string[] = [];
         let ve: [string, Value][] = [];
         for (let i = 0; i < this.type.length; ++i) {
@@ -1526,9 +1527,9 @@ export class DatatypeBinding {
 // Exception Bindings
 
 export interface ExceptionBinding {
-    evaluate(state: State, modifiable: State): void;
-    elaborate(state: State, isTopLevel: boolean, knownTypeVars: Set<string>,
-              options: InterpreterOptions): State;
+    evaluate(state: any, modifiable: any): void;
+    elaborate(state: any, isTopLevel: boolean, knownTypeVars: Set<string>,
+              options: InterpreterOptions): any;
 }
 
 export class DirectExceptionBinding implements ExceptionBinding {
@@ -1537,8 +1538,8 @@ export class DirectExceptionBinding implements ExceptionBinding {
                 public type: Type | undefined) {
     }
 
-    elaborate(state: State, isTopLevel: boolean, knownTypeVars: Set<string>,
-              options: InterpreterOptions): State {
+    elaborate(state: any, isTopLevel: boolean, knownTypeVars: Set<string>,
+              options: InterpreterOptions): any {
         if (this.type !== undefined) {
             let tp = this.type.simplify().instantiate(state, new Map<string, [Type, boolean]>());
             let tyvars: string[] = [];
@@ -1561,7 +1562,7 @@ export class DirectExceptionBinding implements ExceptionBinding {
         return state;
     }
 
-    evaluate(state: State, modifiable: State): void {
+    evaluate(state: any, modifiable: any): void {
         let numArg = 0;
         if (this.type !== undefined) {
             numArg = 1;
@@ -1585,8 +1586,8 @@ export class ExceptionAlias implements ExceptionBinding {
     constructor(public name: IdentifierToken, public oldname: Token) {
     }
 
-    elaborate(state: State, isTopLevel: boolean, knownTypeVars: Set<string> = new Set<string>(),
-              options: InterpreterOptions): State {
+    elaborate(state: any, isTopLevel: boolean, knownTypeVars: Set<string> = new Set<string>(),
+              options: InterpreterOptions): any {
         let res: [Type, IdentifierStatus] | undefined = undefined;
         if (this.oldname instanceof LongIdentifierToken) {
             let st = state.getAndResolveStaticStructure(<LongIdentifierToken> this.oldname);
@@ -1607,7 +1608,7 @@ export class ExceptionAlias implements ExceptionBinding {
         return state;
     }
 
-    evaluate(state: State, modifiable: State): void {
+    evaluate(state: any, modifiable: any): void {
         let res: [Value, IdentifierStatus] | undefined = undefined;
         if (this.oldname instanceof LongIdentifierToken) {
             let st = state.getAndResolveDynamicStructure(<LongIdentifierToken> this.oldname);

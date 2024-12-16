@@ -1,4 +1,5 @@
-import { State, IdentifierStatus, EvaluationParameters } from './state';
+import { IState as State } from './state';
+import { IdentifierStatus, EvaluationParameters } from './state';
 import { InternalInterpreterError } from './errors';
 import { CustomType, FunctionType } from './types';
 import { Value, PredefinedFunction, PrintCounter, StringValue, ExceptionValue,

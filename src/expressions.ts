@@ -14,7 +14,7 @@ import { Value, CharValue, StringValue, Integer, Real, Word, ValueConstructor,
 
 export abstract class Expression {
 
-    getType(state: State, // i: State containing stuff bound in previous decls
+    getType(state: any, // i: any containing stuff bound in previous decls
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(), /* i:
             Map containing all typevars in current decl, their type, and whether they are free */
             nextName: string = '\'*t0', // i: Next name for a new type variable
@@ -32,7 +32,7 @@ export abstract class Expression {
     }
 
     // Returns whether the expression could do nasty stuff (value polymorphism ...)
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         return true;
     }
 
@@ -45,7 +45,7 @@ export abstract class Expression {
             'You humans can\'t seem to write bug-free code. What an inferior species.');
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         return new Set<string>();
     }
 
@@ -57,15 +57,15 @@ export interface Pattern {
     // Returns which bindings would be created by matching v to this Pattern,
     // or undefined, if v does not match this Pattern.
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>];
-    cover(state: State, rules: PatternExpression[]): Warning[];
-    matches(state: State, v: Value): [string, Value][] | undefined;
+    cover(state: any, rules: PatternExpression[]): Warning[];
+    matches(state: any, v: Value): [string, Value][] | undefined;
     simplify(): PatternExpression;
     toString(indentation: number, oneLine: boolean): string;
-    subsumes(state: State, other: PatternExpression): boolean;
+    subsumes(state: any, other: PatternExpression): boolean;
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string>;
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string>;
 }
 
 export type PatternExpression = Pattern & Expression;
@@ -73,12 +73,12 @@ export type PatternExpression = Pattern & Expression;
 export class Constant extends Expression implements Pattern {
     constructor(public token: ConstantToken) { super(); }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         return [[], this.getType(state, tyVarBnd)[0], tyVarBnd];
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         while (other instanceof TypedExpression) {
             other = <PatternExpression> (<TypedExpression> other).expression;
         }
@@ -89,11 +89,11 @@ export class Constant extends Expression implements Pattern {
         return false;
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new InternalInterpreterError('一昨日来やがれ。');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         // the call to compute just gets two states but will not use them
         let val = this.compute({'state': state, 'modifiable': state, 'recResult': undefined}, []);
         if (val === undefined || val.value === undefined) {
@@ -107,7 +107,7 @@ export class Constant extends Expression implements Pattern {
         }
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -171,7 +171,7 @@ export class ValueIdentifier extends Expression implements Pattern {
 // op longvid or longvid
     constructor(public name: Token) { super(); }
 
-    getConstructorName(state: State): string | undefined {
+    getConstructorName(state: any): string | undefined {
         // Returns the name of the constructor corresponding to this
         // ValueIdentifier or undefined if this ValueIdentifier is a variable or
         // ExceptionConstructor
@@ -184,7 +184,7 @@ export class ValueIdentifier extends Expression implements Pattern {
         return cnm;
     }
 
-    getConstructorList(state: State): string[] | undefined {
+    getConstructorList(state: any): string[] | undefined {
         // If this ValueIdentifier corresponds to a ValueConstructor,
         // return all constructor names of the corresponding type.
         // Otherwise return undefined.
@@ -215,7 +215,7 @@ export class ValueIdentifier extends Expression implements Pattern {
         return ['__exn'];
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -283,7 +283,7 @@ export class ValueIdentifier extends Expression implements Pattern {
         return [r2, [], nextName, tyVars, tyVarBnd, state.valueIdentifierId];
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         if (this.name instanceof LongIdentifierToken) {
             throw new ElaborationError('Variable names in patterns cannot be qualified.');
@@ -320,7 +320,7 @@ export class ValueIdentifier extends Expression implements Pattern {
         }
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         while (other instanceof TypedExpression) {
             other = <PatternExpression> (<TypedExpression> other).expression;
         }
@@ -336,12 +336,12 @@ export class ValueIdentifier extends Expression implements Pattern {
         return false;
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         // Got checked elsewhere already.
         return [];
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         let res: [Value, IdentifierStatus] | undefined = undefined;
         if (this.name instanceof LongIdentifierToken) {
             let st = state.getAndResolveDynamicStructure(<LongIdentifierToken> this.name);
@@ -412,7 +412,7 @@ export class ValueIdentifier extends Expression implements Pattern {
         };
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         if (conn.has(this.name.getText())) {
             return new Set<string>();
         }
@@ -457,7 +457,7 @@ export class Record extends Expression implements Pattern {
         return false;
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         // Checks whether the other record is a special case of this record
         // Assumes that entries are sorted
 
@@ -536,7 +536,7 @@ export class Record extends Expression implements Pattern {
             'Yeah, "' + name + '" would be nice to have.');
     }
 
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         for (let i = 0; i < this.entries.length; ++i) {
             if (!this.entries[i][1].isSafe(state)) {
                 return false;
@@ -545,7 +545,7 @@ export class Record extends Expression implements Pattern {
         return true;
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         if (!(t instanceof RecordType)) {
             t = t.instantiate(state, tyVarBnd);
@@ -648,7 +648,7 @@ export class Record extends Expression implements Pattern {
 
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         // Check that first entry alone is exhaustive,
         // then split all rules according to first entry and check that they are
         // exhaustive as well
@@ -889,7 +889,7 @@ export class Record extends Expression implements Pattern {
         return warns;
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         if (!(v instanceof RecordValue)) {
             return undefined;
         }
@@ -915,7 +915,7 @@ export class Record extends Expression implements Pattern {
         return res;
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1048,7 +1048,7 @@ export class Record extends Expression implements Pattern {
         };
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         let seen = new Set<string>();
 
         for (let i = 0; i < this.entries.length; ++i) {
@@ -1083,11 +1083,11 @@ export class LocalDeclarationExpression extends Expression {
         return res;
     }
 
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         return false;
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1158,7 +1158,7 @@ export class LocalDeclarationExpression extends Expression {
         };
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         this.declaration.assertUniqueBinding(state, conn);
         this.expression.assertUniqueBinding(state, conn);
         return new Set<string>();
@@ -1178,11 +1178,11 @@ export class TypedExpression extends Expression implements Pattern {
         return res;
     }
 
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         return this.expression.isSafe(state);
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         let tp = (<PatternExpression> this.expression).matchType(state, tyVarBnd, t);
 
@@ -1200,19 +1200,19 @@ export class TypedExpression extends Expression implements Pattern {
         }
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         return (<PatternExpression> this.expression).subsumes(state, other);
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new InternalInterpreterError('一昨日来やがれ。');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         return (<PatternExpression> this.expression).matches(state, v);
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1252,7 +1252,7 @@ export class TypedExpression extends Expression implements Pattern {
         return this.expression.compute(params, callStack);
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         return this.expression.assertUniqueBinding(state, conn);
     }
 }
@@ -1274,7 +1274,7 @@ export class FunctionApplication extends Expression implements Pattern {
         return res;
     }
 
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         if (!(this.func instanceof ValueIdentifier)) {
             return false;
         }
@@ -1285,7 +1285,7 @@ export class FunctionApplication extends Expression implements Pattern {
         return f[1] !== IdentifierStatus.VALUE_VARIABLE;
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         if (!(this.func instanceof ValueIdentifier)) {
             throw new ElaborationError('Non-identifier applied to a pattern.');
@@ -1327,7 +1327,7 @@ export class FunctionApplication extends Expression implements Pattern {
         }
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         while (other instanceof TypedExpression) {
             other = <PatternExpression> (<TypedExpression> other).expression;
         }
@@ -1339,7 +1339,7 @@ export class FunctionApplication extends Expression implements Pattern {
         return false;
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         // Remove outermost function application and check parameters
         return (<PatternExpression> this.argument).cover(
             state, rules.map((rule: PatternExpression) => {
@@ -1351,7 +1351,7 @@ export class FunctionApplication extends Expression implements Pattern {
         }));
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         if (v instanceof FunctionValue) {
             throw new EvaluationError(
                 'You simply cannot match function values.');
@@ -1416,7 +1416,7 @@ export class FunctionApplication extends Expression implements Pattern {
             + v.typeName() + ').' );
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1629,7 +1629,7 @@ export class FunctionApplication extends Expression implements Pattern {
         }
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         let fuc = this.func.assertUniqueBinding(state, conn);
         let res = this.argument.assertUniqueBinding(state, conn);
         if (this.func instanceof ValueIdentifier) {
@@ -1651,7 +1651,7 @@ export class HandleException extends Expression {
         return this.expression.getExplicitTypeVariables();
     }
 
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         return this.expression.isSafe(state);
     }
 
@@ -1665,7 +1665,7 @@ export class HandleException extends Expression {
         return res;
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1762,7 +1762,7 @@ export class HandleException extends Expression {
         };
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         this.expression.assertUniqueBinding(state, conn);
         this.match.assertUniqueBinding(state, conn);
         return new Set<string>();
@@ -1781,7 +1781,7 @@ export class RaiseException extends Expression {
         return new RaiseException(this.expression.simplify());
     }
 
-    isSafe(state: State): boolean {
+    isSafe(state: any): boolean {
         return false;
     }
 
@@ -1789,7 +1789,7 @@ export class RaiseException extends Expression {
         return 'raise ' + this.expression;
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1840,7 +1840,7 @@ export class RaiseException extends Expression {
         };
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         this.expression.assertUniqueBinding(state, conn);
         return new Set<string>();
     }
@@ -1862,7 +1862,7 @@ export class Lambda extends Expression {
         return '(fn ' + this.match + ')';
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -1891,7 +1891,7 @@ export class Lambda extends Expression {
         };
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         this.match.assertUniqueBinding(state, conn);
         return new Set<string>();
     }
@@ -1957,7 +1957,7 @@ export class Match {
         };
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false, checkEx: boolean = true,
@@ -2074,7 +2074,7 @@ export class Match {
         return [restp, warns, nextName, tyVars, bnds, state.valueIdentifierId];
     }
 
-    checkExhaustiveness(state: State): Warning[] {
+    checkExhaustiveness(state: any): Warning[] {
         return new Wildcard().cover(state,
                                       this.matches.map((a: [PatternExpression, Expression]) => {
             return a[0];
@@ -2090,7 +2090,7 @@ export class Match {
         return new Match(newMatches);
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         for (let i = 0; i < this.matches.length; ++i) {
             this.matches[i][0].assertUniqueBinding(state, conn);
             this.matches[i][1].assertUniqueBinding(state, conn);
@@ -2104,7 +2104,7 @@ export class Match {
 export class Wildcard extends Expression implements Pattern {
     constructor() { super(); }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -2128,16 +2128,16 @@ export class Wildcard extends Expression implements Pattern {
             'Wildcards are far too wild to have a value.');
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         return [[], t, tyVarBnd];
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         return true;
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         let isExh = false;
         let hasWildcard = false;
         let warns: Warning[] = [];
@@ -2288,7 +2288,7 @@ export class Wildcard extends Expression implements Pattern {
         return warns;
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         return [];
     }
 
@@ -2300,7 +2300,7 @@ export class Wildcard extends Expression implements Pattern {
         return '_';
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         return new Set<string>();
     }
 }
@@ -2311,7 +2311,7 @@ export class LayeredPattern extends Expression implements Pattern {
                 public typeAnnotation: Type | undefined,
                 public pattern: Expression|PatternExpression) { super(); }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -2360,7 +2360,7 @@ export class LayeredPattern extends Expression implements Pattern {
             'Layered patterns are far too layered to have a value.');
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>]  {
 
         let tp = t;
@@ -2381,15 +2381,15 @@ export class LayeredPattern extends Expression implements Pattern {
         return [result.concat(res[0]), t, res[2]];
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new PatternMatchError('Layered patterns are not checked for exhaustiveness.');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new PatternMatchError('Layered patterns are not checked for exhaustiveness.');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         let res = (<PatternExpression> this.pattern).matches(state, v);
         if (res === undefined) {
             return res;
@@ -2411,7 +2411,7 @@ export class LayeredPattern extends Expression implements Pattern {
         return this.identifier.getText() + ' as ' + this.pattern;
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         let res = this.pattern.assertUniqueBinding(state, conn);
 
         let stt = state.getStaticValue(this.identifier.getText());
@@ -2436,7 +2436,7 @@ export class Vector extends Expression implements Pattern {
     // #[exp1, ..., expn]
     constructor(public expressions: Expression[]) { super(); }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string            = '\'*t0',
             tyVars: Set<string>         = new Set<string>(),
@@ -2500,7 +2500,7 @@ export class Vector extends Expression implements Pattern {
     }
 
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         if (!(t instanceof CustomType) || (<CustomType> t).name !== 'vector') {
             throw new ElaborationError(
@@ -2520,15 +2520,15 @@ export class Vector extends Expression implements Pattern {
         return [res, new CustomType('vector', [partp]), tyVarBnd];
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new PatternMatchError('Vector patterns are not checked for exhaustiveness.');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new PatternMatchError('Vector patterns are not checked for exhaustiveness.');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         if (!(v instanceof VectorValue)) {
             throw new ElaborationError(
                 'Vectors like only vectors, not "' + v + '". Stay cool.');
@@ -2578,7 +2578,7 @@ export class ConjunctivePattern extends Expression implements Pattern {
         super();
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -2603,22 +2603,22 @@ export class ConjunctivePattern extends Expression implements Pattern {
         return new ConjunctivePattern(this.left.simplify(), this.right.simplify());
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>]  {
         // TODO
         throw new InternalInterpreterError('「ニャ－、ニャ－」');
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new PatternMatchError('Conjuctive patterns are not checked for exhaustiveness.');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new PatternMatchError(
             'Conjuctive patterns are not checked for exhaustiveness.');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         let r1 = this.left.matches(state, v);
 
         if (r1 === undefined) {
@@ -2639,7 +2639,7 @@ export class ConjunctivePattern extends Expression implements Pattern {
         return (<[string, Value][]> r1).concat(r2);
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         // TODO
         return new Set<string>();
     }
@@ -2652,7 +2652,7 @@ export class DisjunctivePattern extends Expression implements Pattern {
         super();
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -2677,22 +2677,22 @@ export class DisjunctivePattern extends Expression implements Pattern {
         return new DisjunctivePattern(this.left.simplify(), this.right.simplify());
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>]  {
         // TODO
         throw new InternalInterpreterError('「ニャ－、ニャ－」');
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new PatternMatchError('Disjunctive patterns are not checked for exhaustiveness.');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new PatternMatchError(
             'Disjunctive patterns are not checked for exhaustiveness.');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         let r1 = this.left.matches(state, v);
         if (r1 !== undefined) {
             return r1;
@@ -2700,7 +2700,7 @@ export class DisjunctivePattern extends Expression implements Pattern {
         return this.right.matches(state, v);
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         // TODO
         return new Set<string>();
     }
@@ -2713,7 +2713,7 @@ export class NestedMatch extends Expression implements Pattern {
         super();
     }
 
-    getType(state: State,
+    getType(state: any,
             tyVarBnd: Map<string, [Type, boolean]> = new Map<string, [Type, boolean]>(),
             nextName: string = '\'*t0', tyVars: Set<string> = new Set<string>(),
             isPattern: boolean = false,
@@ -2729,22 +2729,22 @@ export class NestedMatch extends Expression implements Pattern {
             this.nested.simplify(), this.expression.simplify());
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>]  {
         // TODO
         throw new InternalInterpreterError('「ニャ－、ニャ－」');
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new PatternMatchError('Nested matches are not checked for exhaustiveness.');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new PatternMatchError(
             'Nested matches are not checked for exhaustiveness.');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         let r1 = this.pattern.matches(state, v);
         if (r1 === undefined) {
             return undefined;
@@ -2754,7 +2754,7 @@ export class NestedMatch extends Expression implements Pattern {
         throw new InternalInterpreterError('「ニャ－、ニャ－」');
     }
 
-    assertUniqueBinding(state: State, conn: Set<string>): Set<string> {
+    assertUniqueBinding(state: any, conn: Set<string>): Set<string> {
         // TODO
         return new Set<string>();
     }
@@ -2773,20 +2773,20 @@ export class InfixExpression extends Expression implements Pattern {
         super();
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         return this.reParse(state).matchType(state, tyVarBnd, t);
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new InternalInterpreterError('一昨日来やがれ。');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         throw new InternalInterpreterError('一昨日来やがれ。');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         return this.reParse(state).matches(state, v);
     }
 
@@ -2794,7 +2794,7 @@ export class InfixExpression extends Expression implements Pattern {
         throw new InternalInterpreterError('Ouch, I\'m not fully parsed.');
     }
 
-    reParse(state: State): FunctionApplication {
+    reParse(state: any): FunctionApplication {
         let ops = this.operators;
         let exps = this.expressions;
         let poses: number[][] = [];
@@ -2898,20 +2898,20 @@ export class Tuple extends Expression implements Pattern {
     // (exp1, ..., expn), n > 1
     constructor(public expressions: Expression[]) { super(); }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         return this.simplify().matchType(state, tyVarBnd, t);
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         return this.simplify().subsumes(state, other);
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         return this.simplify().cover(state, rules);
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         return this.simplify().matches(state, v);
     }
 
@@ -2939,20 +2939,20 @@ export class List extends Expression implements Pattern {
     // [exp1, ..., expn]
     constructor(public expressions: Expression[]) { super(); }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>] {
         return this.simplify().matchType(state, tyVarBnd, t);
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         return this.simplify().subsumes(state, other);
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         return this.simplify().cover(state, rules);
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         return this.simplify().matches(state, v);
     }
 
@@ -3088,23 +3088,23 @@ export class PatternGuard extends Expression implements Pattern {
             trueConstant, this.condition.simplify());
     }
 
-    matchType(state: State, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
+    matchType(state: any, tyVarBnd: Map<string, [Type, boolean]>, t: Type):
         [[string, Type][], Type, Map<string, [Type, boolean]>]  {
         throw new InternalInterpreterError('「ニャ－、ニャ－」');
     }
 
-    subsumes(state: State, other: PatternExpression): boolean {
+    subsumes(state: any, other: PatternExpression): boolean {
         throw new PatternMatchError(
             'Patterns with a pattern guard are not checked for exhaustiveness.');
     }
 
-    cover(state: State, rules: PatternExpression[]): Warning[] {
+    cover(state: any, rules: PatternExpression[]): Warning[] {
         // Cannot check whether pattern is covered here
         throw new PatternMatchError(
             'Patterns with a pattern guard are not checked for exhaustiveness.');
     }
 
-    matches(state: State, v: Value): [string, Value][] | undefined {
+    matches(state: any, v: Value): [string, Value][] | undefined {
         throw new InternalInterpreterError('「ニャ－、ニャ－」');
     }
 
