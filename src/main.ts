@@ -29,7 +29,6 @@ import * as Expressions from './expressions';
 import * as Tokens from './tokens';
 import * as Types from './types';
 import * as Values from './values';
-import * as Version from './version';
 
 export {
     Lexer,
@@ -41,8 +40,7 @@ export {
     Expressions,
     Tokens,
     Types,
-    Values,
-    Version
+    Values
 };
 export * from './state';
 

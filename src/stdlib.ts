@@ -4,7 +4,6 @@ import { CustomType, FunctionType } from './types';
 import { Value, PredefinedFunction, PrintCounter, StringValue, ExceptionValue,
          ExceptionConstructor } from './values';
 import * as Interpreter from './main';
-import { COMMIT_HASH, BRANCH_NAME, BUILD_DATE, COMMIT_MESSAGE, VERSION } from './version';
 import { EvaluationParameters } from './evaluator';
 
 import { ARRAY_LIB } from './stdlib/array';
@@ -152,18 +151,7 @@ export let STDLIB: {
     'Random': RANDOM_LIB,
     'Real': REAL_LIB,
     'String': STRING_LIB, /* Complete % useless stuff */
-    'Vector': VECTOR_LIB,
-    'Version': {
-        'native': undefined,
-        'code': `structure Version = struct
-            val version     = "` + VERSION + `";
-            val branch      = "` + BRANCH_NAME + `";
-            val commit      = "` + COMMIT_HASH + `";
-            val buildDate   = "` + BUILD_DATE + `";
-            val message     = "` + COMMIT_MESSAGE + `";
-        end;`,
-        'requires': undefined
-    }
+    'Vector': VECTOR_LIB
 };
 
 export function loadModule(state: State, name: string, options: Interpreter.InterpreterOptions): State {
