@@ -23,6 +23,20 @@ import { intType, realType, wordType, boolType, stringType, charType, exnType, o
 
 export { intType, realType, wordType, boolType, stringType, charType, exnType, overflowException, domainException, sizeException, chrException, subscriptException, failException, addGeneralLib, Module };
 
+// Import stdlib submodules
+import { ARRAY_LIB } from './stdlib/array';
+import { ASSERT_LIB } from './stdlib/assert';
+import { CHAR_LIB } from './stdlib/char';
+import { EVAL_LIB } from './stdlib/eval';
+import { INT_LIB } from './stdlib/int';
+import { LIST_LIB } from './stdlib/list';
+import { LISTSORT_LIB } from './stdlib/listsort';
+import { MATH_LIB } from './stdlib/math';
+import { RANDOM_LIB } from './stdlib/random';
+import { REAL_LIB } from './stdlib/real';
+import { STRING_LIB } from './stdlib/string';
+import { VECTOR_LIB } from './stdlib/vector';
+
 // --------------------------------------
 // Re-exports from original main.ts
 // --------------------------------------
@@ -197,13 +211,126 @@ export function getAvailableModules(): string[] {
 
 export function getFirstState(loadModules: string[] = getAvailableModules(),
                               options: InterpreterOptions = {}): State {
-    /*if (options.noModules === true) {
+    if (options.noModules === true) {
         return getInitialState(options);
     }
     let res = loadModule(getInitialState(options), '__Base', options);
     for (let i of loadModules) {
         res = loadModule(res, i, options);
-    }*/
-	let res = getInitialState(options);
+    }
     return res;
+}
+
+export let STDLIB: {
+    [name: string]: {
+        'native': ((state: State, options?: InterpreterOptions) => State) | undefined,
+        'code': string | undefined,
+        'requires': string[] | undefined
+    }
+} = {
+    '__Base': {
+        'native': addGeneralLib,
+        'code': `fun o (f,g) x = f (g x);
+            infix 3 o;
+            datatype order = LESS | EQUAL | GREATER;
+
+            exception Domain;
+            exception Size;
+            exception Chr;
+            exception Subscript;
+            exception Fail of string;
+
+            fun not true = false | not false = true;
+
+            fun ignore a = ();
+            infix 0 before;
+            fun a before (b: unit) = a;`,
+        'requires': undefined
+    },
+    'Array': ARRAY_LIB,
+    'Assert' : ASSERT_LIB,
+    'Char': CHAR_LIB,
+    'Eval': EVAL_LIB,
+    'Int': INT_LIB,
+    'List': LIST_LIB,
+    'Listsort': LISTSORT_LIB,
+    'Math': MATH_LIB,
+    'Option': {
+        'native': undefined,
+        'code': `structure Option = struct
+                exception Option;
+
+                datatype 'a option = NONE | SOME of 'a;
+
+                fun getOpt (NONE, a) = a
+                  | getOpt (SOME x, a) = x;
+
+                fun isSome NONE = false
+                  | isSome (SOME _) = true;
+
+                fun valOf (SOME x) = x
+                  | valOf NONE = raise Option;
+            end;
+            open Option;
+
+            structure Option = struct
+                open Option;
+
+                fun app f (SOME v) = f v
+                  | app f NONE = ();
+
+                fun map f NONE = NONE
+                  | map f (SOME v) = SOME(f v);
+
+                fun mapPartial f NONE = NONE
+                  | mapPartial f (SOME v) = f v;
+
+                fun filter f x = if f x then SOME x else NONE;
+
+                fun join NONE = NONE
+                  | join (SOME (SOME x)) = SOME x;
+
+                fun compose (f, g) a = case g a of
+                      NONE => NONE
+                    | SOME v => SOME (f v);
+
+                fun composePartial (f, g) a = case g a of
+                      NONE => NONE
+                    | SOME v => (f v);
+            end;
+            `,
+        'requires': undefined
+    },
+    'Random': RANDOM_LIB,
+    'Real': REAL_LIB,
+    'String': STRING_LIB,
+    'Vector': VECTOR_LIB
+};
+
+export function loadModule(state: State, name: string, options: InterpreterOptions): State {
+    if (!STDLIB.hasOwnProperty(name)) {
+        throw new InternalInterpreterError('The module "' + name + '" does not exist. Auuuu~');
+    }
+    if (state.hasModule(name)) {
+        return state;
+    }
+
+    let mod = STDLIB[name];
+    if (mod.requires !== undefined ) {
+        for (let i of mod.requires) {
+            if (!state.hasModule(i)) {
+                state = loadModule(state, i, options);
+            }
+        }
+    }
+    if (mod.native !== undefined) {
+        state = mod.native(state, options);
+    }
+    if (mod.code !== undefined) {
+        // Previously: state = Interpreter.interpret(mod.code, state, options).state;
+        // Now we directly call interpret since it's defined above
+        state = interpret(mod.code, state, options).state;
+    }
+    state.registerModule(name);
+    return state;
 }
