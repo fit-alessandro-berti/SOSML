@@ -4,7 +4,7 @@ import { FunctionType } from '../types';
 import { MAXINT, MININT } from '../basic';
 import { Integer, PredefinedFunction,  StringValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { Module, intType, stringType } from '../main';
+import { Module, intType, stringType } from '../main0';
 
 function addIntLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

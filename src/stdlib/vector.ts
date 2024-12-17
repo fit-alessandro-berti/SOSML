@@ -4,7 +4,7 @@ import { TypeVariable, FunctionType, CustomType, TupleType } from '../types';
 import { Integer, PredefinedFunction, RecordValue, VectorValue,
     ConstructedValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { Module, subscriptException, intType } from '../main';
+import { Module, subscriptException, intType } from '../main0';
 
 function addVectorLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

@@ -4,7 +4,7 @@ import { TypeVariable, FunctionType, CustomType, TupleType } from '../types';
 import { Integer, PredefinedFunction, RecordValue,
     ConstructedValue, ArrayValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { Module, intType, sizeException, subscriptException } from '../main';
+import { Module, intType, sizeException, subscriptException } from '../main0';
 
 function addArrayLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

@@ -3,7 +3,7 @@ import { State, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType } from '../types';
 import { Real, Integer, PredefinedFunction, StringValue } from '../values';
 import { InternalInterpreterError } from '../errors';
-import { Module, intType, realType, overflowException, stringType } from '../main';
+import { Module, intType, realType, overflowException, stringType } from '../main0';
 
 function addRealLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

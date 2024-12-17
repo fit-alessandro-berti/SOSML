@@ -1,6 +1,6 @@
 import { State, DynamicBasis, StaticBasis } from '../state';
 import { CustomType } from '../types';
-import { Module } from '../main';
+import { Module } from '../main0';
 
 function addStringLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});

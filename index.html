@@ -7,11 +7,13 @@
     <body>
         <script>
             let initialState = Interpreter.getFirstState();
-            let interpretationResult = Interpreter.interpret('val x = "Hello World!";', initialState);
+            let interpretationResult = Interpreter.interpret('val x: int = 5; x = x + 1;', initialState);
+			console.log(interpretationResult);
 			console.log(interpretationResult.state);
+			console.log(interpretationResult.state.toString());
             console.log(interpretationResult.state.toString({stopId: initialState.id + 1}));
-            interpretationResult = Interpreter.interpret('fun f y = x | f 10 = "???";', interpretationResult.state);
-            console.log(interpretationResult.warnings);
+            //interpretationResult = Interpreter.interpret('fun f y = x | f 10 = "???";', interpretationResult.state);
+            //console.log(interpretationResult.warnings);
         </script>
     </body>
 </html>

@@ -2,7 +2,7 @@ import { IdentifierStatus, EvaluationParameters, Value } from '../basic';
 import { State, DynamicBasis, StaticBasis } from '../state';
 import { FunctionType, TupleType } from '../types';
 import { Integer, PredefinedFunction } from '../values';
-import { Module, intType } from '../main';
+import { Module, intType } from '../main0';
 
 function addRandomLib(state: State): State {
     let dres = new DynamicBasis({}, {}, {}, {}, {});
